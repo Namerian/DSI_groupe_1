@@ -8,15 +8,19 @@ public class PlayerCharacterScript : MonoBehaviour
     [SerializeField]
     private float _draggingMultiplyer = 500f;
 
+    [SerializeField]
+    private float _anchorBreakForce = 100f;
+
     private List<ExtremityScript> _extremitiesList;
 
     private bool _isDragging = false;
-    private GameObject _draggedExtremity;
+    private ExtremityScript _draggedExtremity;
 
     // Use this for initialization
     void Start()
     {
         _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
+        Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
     }
 
     void FixedUpdate()
@@ -50,10 +54,11 @@ public class PlayerCharacterScript : MonoBehaviour
         {
             if (_isDragging)
             {
+                Debug.Log("dragging");
+
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
-                //_draggedExtremity.GetComponent<Rigidbody2D>().MovePosition(mousePos);
                 _draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) * _draggingMultiplyer);
             }
             else
@@ -75,21 +80,14 @@ public class PlayerCharacterScript : MonoBehaviour
                                 }
                             }
 
-                            if (numOfAnchoredExtremities > 1 || !collider.GetComponent<ExtremityScript>().IsAnchored)
+                            ExtremityScript extremityScript = collider.GetComponent<ExtremityScript>();
+
+                            if (numOfAnchoredExtremities > 1 || !extremityScript.IsAnchored)
                             {
-                                _draggedExtremity = collider.gameObject;
+                                _draggedExtremity = extremityScript;
 
-                                HingeJoint2D hingeJoint = _draggedExtremity.GetComponent<HingeJoint2D>();
-
-                                //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
-                                _draggedExtremity.GetComponent<ExtremityScript>().IsMoving = true;
-                                hingeJoint.enabled = false;
-
-                                if (hingeJoint.connectedBody != null)
-                                {
-                                    hingeJoint.connectedBody.GetComponent<AnchorScript>().IsInUse = false;
-                                    hingeJoint.connectedBody = null;
-                                }
+                                _draggedExtremity.UnanchorExtremity();
+                                _draggedExtremity.IsMoving = true;
 
                                 _isDragging = true;
 
@@ -104,38 +102,26 @@ public class PlayerCharacterScript : MonoBehaviour
         {
             if (_isDragging)
             {
-                //Collider2D[] colliders = Physics2D.OverlapPointAll(_draggedExtremity.transform.position);
                 Collider2D[] colliders = Physics2D.OverlapBoxAll(_draggedExtremity.transform.position, _draggedExtremity.GetComponent<BoxCollider2D>().size, _draggedExtremity.transform.rotation.z);
-
-                bool foundAnchor = false;
 
                 if (colliders != null)
                 {
                     foreach (Collider2D collider in colliders)
                     {
-                        if (collider.CompareTag("Anchor") && collider.GetComponent<AnchorScript>().IsInUse == false)
+                        AnchorScript anchorScript = collider.GetComponent<AnchorScript>();
+
+                        if (collider.CompareTag("Anchor") && anchorScript.IsInUse == false)
                         {
-                            collider.GetComponent<AnchorScript>().IsInUse = true;
+                            Debug.Log("end of drag, anchored extremity");
 
-                            HingeJoint2D hingeJoint = _draggedExtremity.GetComponent<HingeJoint2D>();
-
-                            hingeJoint.connectedBody = collider.GetComponent<Rigidbody2D>();
-                            hingeJoint.enabled = true;
-
-                            foundAnchor = true;
+                            _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
 
                             break;
                         }
                     }
                 }
 
-                if (!foundAnchor)
-                {
-                    _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
-                }
-
-                //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = false;
-                _draggedExtremity.GetComponent<ExtremityScript>().IsMoving = false;
+                _draggedExtremity.IsMoving = false;
                 _draggedExtremity = null;
 
                 _isDragging = false;
