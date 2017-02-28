@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Drag : MonoBehaviour
+public class PlayerCharacterScript : MonoBehaviour
 {
     [SerializeField]
     private float _draggingMultiplyer = 500f;
+
+    private List<ExtremityScript> _extremitiesList;
 
     private bool _isDragging = false;
     private GameObject _draggedExtremity;
@@ -13,18 +16,40 @@ public class Drag : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
+        //******************************************************
+        // DEATH
+
+        bool isDead = true;
+        float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize - 1;
+
+        foreach(ExtremityScript extremity in _extremitiesList)
+        {
+            if(extremity.transform.position.y >= deathPos)
+            {
+                isDead = false;
+                break;
+            }
+        }
+
+        if (isDead)
+        {
+            Debug.Log("Player Died!");
+
+            Invoke("ReloadScene", 0.5f);
+        }
+
+        //******************************************************
+        // MOVEMENT
+
         if (Input.GetMouseButton(0))
         {
             if (_isDragging)
             {
-                Debug.Log("mouse button down AND dragging!");
-
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
@@ -33,46 +58,41 @@ public class Drag : MonoBehaviour
             }
             else
             {
-                Debug.Log("mouse button down AND not dragging!");
-
                 Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
                 if (colliders != null)
                 {
-                    bool foundExtremity = false;
-
                     foreach (Collider2D collider in colliders)
                     {
                         if (collider.CompareTag("Extremity"))
                         {
-                            Debug.Log("Found Extremity!");
-
-                            _draggedExtremity = collider.gameObject;
-                            //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
-                            _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
-
-                            if(_draggedExtremity.GetComponent<HingeJoint2D>().connectedBody != null)
+                            int numOfAnchoredExtremities = 0;
+                            foreach (ExtremityScript extremity in _extremitiesList)
                             {
-                                _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody.GetComponent<AnchorScript>().IsInUse = false;
-                                _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = null;
+                                if (extremity.IsAnchored)
+                                {
+                                    numOfAnchoredExtremities++;
+                                }
                             }
 
-                            _isDragging = true;
+                            if (numOfAnchoredExtremities > 1 || !collider.GetComponent<ExtremityScript>().IsAnchored)
+                            {
+                                _draggedExtremity = collider.gameObject;
+                                //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
+                                _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
 
-                            foundExtremity = true;
+                                if (_draggedExtremity.GetComponent<HingeJoint2D>().connectedBody != null)
+                                {
+                                    _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody.GetComponent<AnchorScript>().IsInUse = false;
+                                    _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = null;
+                                }
 
-                            break;
+                                _isDragging = true;
+
+                                break;
+                            }
                         }
                     }
-
-                    if (!foundExtremity)
-                    {
-                        Debug.Log("hits but no extremity! num of hits=" + colliders.Length);
-                    }
-                }
-                else
-                {
-                    Debug.Log("mouse click: no hits!");
                 }
             }
         }
@@ -114,5 +134,10 @@ public class Drag : MonoBehaviour
                 _isDragging = false;
             }
         }
+    }
+
+    private void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
