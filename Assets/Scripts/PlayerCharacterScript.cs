@@ -80,6 +80,7 @@ public class PlayerCharacterScript : MonoBehaviour
                                 }
                             }
 
+                            Debug.Log(numOfAnchoredExtremities);
                             ExtremityScript extremityScript = collider.GetComponent<ExtremityScript>();
 
                             if (numOfAnchoredExtremities > 1 || !extremityScript.IsAnchored)
@@ -88,11 +89,23 @@ public class PlayerCharacterScript : MonoBehaviour
 
                                 _draggedExtremity.UnanchorExtremity();
                                 _draggedExtremity.IsMoving = true;
-
                                 _isDragging = true;
-
                                 break;
                             }
+
+                       //Plutôt que le if qu'il y a juste au dessus, il faudrait faire un truc qui vérifie si le joueur n'est accroché nulle part au moment où il commence le drag
+                       //Et si c'est le cas, annuler son drag pour le faire tomber. J'ai essayé de le faire en dessous mais j'ai pas réussi
+                            /*
+                            if (numOfAnchoredExtremities <= 1)
+                            {
+                                _draggedExtremity.IsMoving = false;
+                                _isDragging = false;
+                            }
+                            else
+                            {
+                                _isDragging = true;
+                            }                               
+                            */
                         }
                     }
                 }
@@ -114,7 +127,7 @@ public class PlayerCharacterScript : MonoBehaviour
                         {
                             Debug.Log("end of drag, anchored extremity");
 
-                            _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
+                            _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce); //Dans la fonction AnchorExtremity, le _anchorbreakforce ne s'appliquera que si c'est un Moving Anchor
 
                             break;
                         }
