@@ -26,6 +26,7 @@ public class Drag : MonoBehaviour
                 mousePos.z = 0;
 
                 _draggedExtremity.GetComponent<Rigidbody2D>().MovePosition(mousePos);
+                //_draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) *1000);
             }
             else
             {
@@ -46,6 +47,7 @@ public class Drag : MonoBehaviour
                             _draggedExtremity = collider.gameObject;
                             _draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
                             _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = null;
+                            _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
 
                             _isDragging = true;
 
@@ -86,6 +88,7 @@ public class Drag : MonoBehaviour
                 }
 
                 _draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = false;
+                _draggedExtremity.GetComponent<HingeJoint2D>().enabled = true;
                 _draggedExtremity = null;
 
                 _isDragging = false;
