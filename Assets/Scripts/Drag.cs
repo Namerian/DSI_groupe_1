@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Drag : MonoBehaviour
 {
+    [SerializeField]
+    private float _draggingMultiplyer = 500f;
+
     private bool _isDragging = false;
     private GameObject _draggedExtremity;
 
@@ -26,7 +29,7 @@ public class Drag : MonoBehaviour
                 mousePos.z = 0;
 
                 //_draggedExtremity.GetComponent<Rigidbody2D>().MovePosition(mousePos);
-                _draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) *500);
+                _draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) * _draggingMultiplyer);
             }
             else
             {
@@ -50,7 +53,7 @@ public class Drag : MonoBehaviour
 
                             if(_draggedExtremity.GetComponent<HingeJoint2D>().connectedBody != null)
                             {
-                                _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody.GetComponent<AnchorScript>().InUse = false;
+                                _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody.GetComponent<AnchorScript>().IsInUse = false;
                                 _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = null;
                             }
 
@@ -77,22 +80,32 @@ public class Drag : MonoBehaviour
         {
             if (_isDragging)
             {
-                Collider2D[] colliders = Physics2D.OverlapPointAll(_draggedExtremity.transform.position);
+                //Collider2D[] colliders = Physics2D.OverlapPointAll(_draggedExtremity.transform.position);
+                Collider2D[] colliders = Physics2D.OverlapBoxAll(_draggedExtremity.transform.position, _draggedExtremity.GetComponent<BoxCollider2D>().size, _draggedExtremity.transform.rotation.z);
+
+                bool foundAnchor = false;
 
                 if (colliders != null)
                 {
                     foreach (Collider2D collider in colliders)
                     {
-                        if (collider.CompareTag("Anchor") && collider.GetComponent<AnchorScript>().InUse == false)
+                        if (collider.CompareTag("Anchor") && collider.GetComponent<AnchorScript>().IsInUse == false)
                         {
-                            collider.GetComponent<AnchorScript>().InUse = true;
+                            collider.GetComponent<AnchorScript>().IsInUse = true;
                             _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = collider.GetComponent<Rigidbody2D>();
 
                             _draggedExtremity.GetComponent<HingeJoint2D>().enabled = true;
 
+                            foundAnchor = true;
+
                             break;
                         }
                     }
+                }
+
+                if (!foundAnchor)
+                {
+                    _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
                 }
 
                 //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = false;
