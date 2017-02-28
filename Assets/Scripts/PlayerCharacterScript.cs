@@ -27,9 +27,9 @@ public class PlayerCharacterScript : MonoBehaviour
         bool isDead = true;
         float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize - 1;
 
-        foreach(ExtremityScript extremity in _extremitiesList)
+        foreach (ExtremityScript extremity in _extremitiesList)
         {
-            if(extremity.transform.position.y >= deathPos)
+            if (extremity.transform.position.y >= deathPos)
             {
                 isDead = false;
                 break;
@@ -78,13 +78,17 @@ public class PlayerCharacterScript : MonoBehaviour
                             if (numOfAnchoredExtremities > 1 || !collider.GetComponent<ExtremityScript>().IsAnchored)
                             {
                                 _draggedExtremity = collider.gameObject;
-                                //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
-                                _draggedExtremity.GetComponent<HingeJoint2D>().enabled = false;
 
-                                if (_draggedExtremity.GetComponent<HingeJoint2D>().connectedBody != null)
+                                HingeJoint2D hingeJoint = _draggedExtremity.GetComponent<HingeJoint2D>();
+
+                                //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = true;
+                                _draggedExtremity.GetComponent<ExtremityScript>().IsMoving = true;
+                                hingeJoint.enabled = false;
+
+                                if (hingeJoint.connectedBody != null)
                                 {
-                                    _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody.GetComponent<AnchorScript>().IsInUse = false;
-                                    _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = null;
+                                    hingeJoint.connectedBody.GetComponent<AnchorScript>().IsInUse = false;
+                                    hingeJoint.connectedBody = null;
                                 }
 
                                 _isDragging = true;
@@ -112,9 +116,11 @@ public class PlayerCharacterScript : MonoBehaviour
                         if (collider.CompareTag("Anchor") && collider.GetComponent<AnchorScript>().IsInUse == false)
                         {
                             collider.GetComponent<AnchorScript>().IsInUse = true;
-                            _draggedExtremity.GetComponent<HingeJoint2D>().connectedBody = collider.GetComponent<Rigidbody2D>();
 
-                            _draggedExtremity.GetComponent<HingeJoint2D>().enabled = true;
+                            HingeJoint2D hingeJoint = _draggedExtremity.GetComponent<HingeJoint2D>();
+
+                            hingeJoint.connectedBody = collider.GetComponent<Rigidbody2D>();
+                            hingeJoint.enabled = true;
 
                             foundAnchor = true;
 
@@ -129,6 +135,7 @@ public class PlayerCharacterScript : MonoBehaviour
                 }
 
                 //_draggedExtremity.GetComponent<Rigidbody2D>().isKinematic = false;
+                _draggedExtremity.GetComponent<ExtremityScript>().IsMoving = false;
                 _draggedExtremity = null;
 
                 _isDragging = false;
