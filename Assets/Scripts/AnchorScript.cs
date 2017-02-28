@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnchorScript : MonoBehaviour {
 
+    public bool InUse { get; set; }
+
 	// Use this for initialization
 	void Start () {
 		
