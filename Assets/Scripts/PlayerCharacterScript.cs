@@ -22,6 +22,7 @@ public class PlayerCharacterScript : MonoBehaviour
     private List<ExtremityScript> _extremitiesList;
 
     private bool _isDragging = false;
+    private bool _anchoringAllowed = false;
     private ExtremityScript _draggedExtremity;
 
     private UIManager _uiManager;
@@ -138,12 +139,16 @@ public class PlayerCharacterScript : MonoBehaviour
 
                                 _draggedExtremity.UnanchorExtremity();
                                 _draggedExtremity.IsMoving = true;
+
                                 _isDragging = true;
+                                _anchoringAllowed = false;
+                                Invoke("AllowAnchoring", 0.3f);
+
                                 break;
                             }
 
-                       //Plutôt que le if qu'il y a juste au dessus, il faudrait faire un truc qui vérifie si le joueur n'est accroché nulle part au moment où il commence le drag
-                       //Et si c'est le cas, annuler son drag pour le faire tomber. J'ai essayé de le faire en dessous mais j'ai pas réussi
+                            //Plutôt que le if qu'il y a juste au dessus, il faudrait faire un truc qui vérifie si le joueur n'est accroché nulle part au moment où il commence le drag
+                            //Et si c'est le cas, annuler son drag pour le faire tomber. J'ai essayé de le faire en dessous mais j'ai pas réussi
                             /*
                             if (numOfAnchoredExtremities <= 1)
                             {
@@ -162,7 +167,7 @@ public class PlayerCharacterScript : MonoBehaviour
         }
         else
         {
-            if (_isDragging)
+            if (_isDragging && _anchoringAllowed)
             {
                 Collider2D[] colliders = Physics2D.OverlapBoxAll(_draggedExtremity.transform.position, _draggedExtremity.GetComponent<BoxCollider2D>().size, _draggedExtremity.transform.rotation.z);
 
@@ -189,6 +194,13 @@ public class PlayerCharacterScript : MonoBehaviour
 
                 _isDragging = false;
             }
+            else if (_isDragging)
+            {
+                _draggedExtremity.IsMoving = false;
+                _draggedExtremity = null;
+
+                _isDragging = false;
+            }
         }
     }
 
@@ -199,5 +211,10 @@ public class PlayerCharacterScript : MonoBehaviour
     private void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void AllowAnchoring()
+    {
+        _anchoringAllowed = true;
     }
 }
