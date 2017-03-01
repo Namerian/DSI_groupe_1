@@ -8,7 +8,7 @@ public class ExtremityScript : MonoBehaviour
 
     private bool _isMoving;
     private GameObject _helpCircle;
-    private AnchorScript _anchor;
+    private AbstractAnchorScript _anchor;
 
     public bool IsMoving
     {
@@ -68,7 +68,7 @@ public class ExtremityScript : MonoBehaviour
         }
     }
 
-    public void AnchorExtremity(AnchorScript anchor, float breakForce)
+    public void AnchorExtremity(AbstractAnchorScript anchor, float breakForce)
     {
         _anchor = anchor;
 
@@ -78,8 +78,10 @@ public class ExtremityScript : MonoBehaviour
         }
 
         _hingeJoint.connectedBody = anchor.GetComponent<Rigidbody2D>();
+
         if (anchor.GetComponent<MovingAnchorScript>()) _hingeJoint.breakForce = breakForce;  //On change la breakforce uniquement si l'anchor est un moving anchor
         else if (_hingeJoint.breakForce != Mathf.Infinity) _hingeJoint.breakForce = 99999;  //Faire _hingJoint.breakForce = Mathf.Infinity
+
         _hingeJoint.enabled = true;
 
         _anchor.IsInUse = true;
