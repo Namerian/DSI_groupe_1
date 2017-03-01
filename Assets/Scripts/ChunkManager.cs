@@ -4,17 +4,34 @@ using UnityEngine;
 
 public class ChunkManager : MonoBehaviour
 {
+    [Header("Prefabs")]
+
     [SerializeField]
     private List<GameObject> _chunkPrefabs;
 
-    [SerializeField]
-    private GameObject _startChunk;
-
+    [Space(10)]
     [SerializeField]
     private GameObject _backgroundPrefab;
 
+    [Space(10)]
+    [SerializeField]
+    private GameObject _startChunk;
+
+    [Header("Parameters")]
+
+    [SerializeField]
+    private float _maxChunkSpawnOffset = 1f;
+
+    [SerializeField]
+    private float _chunkSpawnOffsetInterval = 0.2f;
+
+    //======================================================
+    //
+    //======================================================
+
     private List<ChunkScript> _chunks = new List<ChunkScript>();
     private List<ChunkScript> _backgrounds = new List<ChunkScript>();
+    private List<float> _chunkSpawnXPositions = new List<float>();
 
     // Use this for initialization
     void Start()
@@ -24,6 +41,26 @@ public class ChunkManager : MonoBehaviour
         GameObject newBackground = Instantiate<GameObject>(_backgroundPrefab, this.transform);
         ChunkScript bgScript = newBackground.GetComponent<ChunkScript>();
         _backgrounds.Add(bgScript);
+
+        //**********************************
+
+        _chunkSpawnXPositions.Add(0);
+
+        float possibleChunkXPos = _chunkSpawnOffsetInterval;
+
+        while (possibleChunkXPos <= _maxChunkSpawnOffset)
+        {
+            _chunkSpawnXPositions.Add(possibleChunkXPos);
+            possibleChunkXPos += _chunkSpawnOffsetInterval;
+        }
+
+        possibleChunkXPos = -_chunkSpawnOffsetInterval;
+
+        while (possibleChunkXPos >= -_maxChunkSpawnOffset)
+        {
+            _chunkSpawnXPositions.Add(possibleChunkXPos);
+            possibleChunkXPos -= _chunkSpawnOffsetInterval;
+        }
     }
 
     // Update is called once per frame
@@ -44,7 +81,9 @@ public class ChunkManager : MonoBehaviour
             ChunkScript newChunkScript = newChunk.GetComponent<ChunkScript>();
 
             float newChunkHalfHeight = Mathf.Abs(newChunkScript.BottomPosition.y - newChunkScript.transform.position.y);
-            newChunk.transform.position = new Vector3(0, chunksUpperYPos + newChunkHalfHeight);
+            float newChunkXPos = _chunkSpawnXPositions[Random.Range(0, _chunkSpawnXPositions.Count - 1)];
+
+            newChunk.transform.position = new Vector3(newChunkXPos, chunksUpperYPos + newChunkHalfHeight);
 
             _chunks.Add(newChunkScript);
         }
