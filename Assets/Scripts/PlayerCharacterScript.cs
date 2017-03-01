@@ -80,7 +80,7 @@ public class PlayerCharacterScript : MonoBehaviour
                                 }
                             }
 
-                            Debug.Log(numOfAnchoredExtremities);
+                            //Debug.Log(numOfAnchoredExtremities);
                             ExtremityScript extremityScript = collider.GetComponent<ExtremityScript>();
 
                             if (numOfAnchoredExtremities > 1 || !extremityScript.IsAnchored)
