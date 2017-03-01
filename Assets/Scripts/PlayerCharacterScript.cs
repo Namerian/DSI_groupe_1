@@ -24,6 +24,7 @@ public class PlayerCharacterScript : MonoBehaviour
     private bool _isDragging = false;
     private bool _anchoringAllowed = false;
     private ExtremityScript _draggedExtremity;
+    private float _levitationTimer;
 
     private UIManager _uiManager;
     private int _numOfAnchoredExtremitiesTest;
@@ -103,15 +104,39 @@ public class PlayerCharacterScript : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            //**********************
+            // mouse down AND dragging
             if (_isDragging)
             {
-                //Debug.Log("dragging");
+                int numOfAnchoredExtremities = 0;
+                foreach (ExtremityScript extremity in _extremitiesList)
+                {
+                    if (extremity.IsAnchored)
+                    {
+                        numOfAnchoredExtremities++;
+                    }
+                }
+
+                if (numOfAnchoredExtremities == 0)
+                {
+                    _levitationTimer += Time.fixedDeltaTime;
+                }
 
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
                 _draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) * _draggingMultiplyer);
+
+                if (_levitationTimer > 1f)
+                {
+                    _draggedExtremity.IsMoving = false;
+                    _draggedExtremity = null;
+
+                    _isDragging = false;
+                }
             }
+            //**********************
+            // mouse down AND NOT dragging
             else
             {
                 Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -122,49 +147,27 @@ public class PlayerCharacterScript : MonoBehaviour
                     {
                         if (collider.CompareTag("Extremity"))
                         {
-                            int numOfAnchoredExtremities = 0;
-                            foreach (ExtremityScript extremity in _extremitiesList)
-                            {
-                                if (extremity.IsAnchored)
-                                {
-                                    numOfAnchoredExtremities++;
-                                }
-                            }
-
                             ExtremityScript extremityScript = collider.GetComponent<ExtremityScript>();
 
-                            if (numOfAnchoredExtremities > 1 || !extremityScript.IsAnchored)
-                            {
-                                _draggedExtremity = extremityScript;
+                            _draggedExtremity = extremityScript;
 
-                                _draggedExtremity.UnanchorExtremity();
-                                _draggedExtremity.IsMoving = true;
+                            _draggedExtremity.UnanchorExtremity();
+                            _draggedExtremity.IsMoving = true;
 
-                                _isDragging = true;
-                                _anchoringAllowed = false;
-                                Invoke("AllowAnchoring", 0.3f);
+                            _isDragging = true;
+                            _anchoringAllowed = false;
+                            _levitationTimer = 0f;
 
-                                break;
-                            }
+                            Invoke("AllowAnchoring", 0.3f);
 
-                            //Plutôt que le if qu'il y a juste au dessus, il faudrait faire un truc qui vérifie si le joueur n'est accroché nulle part au moment où il commence le drag
-                            //Et si c'est le cas, annuler son drag pour le faire tomber. J'ai essayé de le faire en dessous mais j'ai pas réussi
-                            /*
-                            if (numOfAnchoredExtremities <= 1)
-                            {
-                                _draggedExtremity.IsMoving = false;
-                                _isDragging = false;
-                            }
-                            else
-                            {
-                                _isDragging = true;
-                            }                               
-                            */
+                            break;
                         }
                     }
                 }
             }
         }
+        //**********************
+        // mouse NOT down
         else
         {
             if (_isDragging && _anchoringAllowed)
