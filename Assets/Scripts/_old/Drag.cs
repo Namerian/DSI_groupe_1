@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Drag : MonoBehaviour
+/*public class Drag : MonoBehaviour
 {
     [SerializeField]
     private float _draggingMultiplyer = 500f;
@@ -115,4 +115,4 @@ public class Drag : MonoBehaviour
             }
         }
     }
-}
+}*/
