@@ -1,18 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnchorScript : MonoBehaviour
+public class AnchorScript : AbstractAnchorScript
 {
-    public bool IsInUse { get; set; }
-
-    // Use this for initialization
-    /*void Start () {
-		
-	}*/
-
-    // Update is called once per frame
-    /*void Update () {
-		
-	}*/
+    public override void Respawn()
+    {
+        GameObject go = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/Anchors/Anchor"), this.transform.parent);
+        go.transform.position = this.transform.position;
+        Destroy(this.gameObject);
+    }
 }

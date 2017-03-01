@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingAnchorScript : AnchorScript
+public class MovingAnchorScript : AbstractAnchorScript
 {
     [SerializeField]
     private float _yOffset = 1f;
@@ -35,5 +35,12 @@ public class MovingAnchorScript : AnchorScript
         if(_yOffset != 0 && _xOffset != 0) rb.MovePosition(new Vector3(_basePos.x + Mathf.PingPong(_timer, _xOffset), _basePos.y + Mathf.PingPong(_timer, _yOffset), _basePos.z));
         else if (_yOffset == 0) rb.MovePosition(new Vector3(_basePos.x + Mathf.PingPong(_timer, _xOffset), _basePos.y, _basePos.z));
         else if (_xOffset == 0) rb.MovePosition(new Vector3(_basePos.x, _basePos.y + Mathf.PingPong(_timer, _yOffset), _basePos.z));
+    }
+
+    public override void Respawn()
+    {
+        GameObject go = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/Anchors/MovingAnchor"), this.transform.parent);
+        go.transform.position = this.transform.position;
+        Destroy(this.gameObject);
     }
 }

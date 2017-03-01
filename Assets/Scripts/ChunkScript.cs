@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ChunkScript : MonoBehaviour
 {
+    //========================================================
+    //
+    //========================================================
+
     private Transform _topTransform;
     private Transform _bottomTransform;
 
@@ -33,18 +37,29 @@ public class ChunkScript : MonoBehaviour
         }
     }
 
+    //========================================================
+    //
+    //========================================================
+
     public Vector3 TopPosition { get { return TopTransform.position; } }
 
     public Vector3 BottomPosition { get { return BottomTransform.position; } }
 
+    //========================================================
+    //
+    //========================================================
+
     // Use this for initialization
-    /*void Start()
+    void Start()
     {
-    }*/
+        if (this.gameObject.name != "StartChunk")
+        {
+            AbstractAnchorScript[] anchors = GetComponentsInChildren<AbstractAnchorScript>();
 
-    // Update is called once per frame
-    /*void Update()
-    {
-
-    }*/
+            foreach (AbstractAnchorScript anchor in anchors)
+            {
+                anchor.Respawn();
+            }
+        }
+    }
 }
