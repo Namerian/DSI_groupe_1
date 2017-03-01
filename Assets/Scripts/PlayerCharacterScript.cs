@@ -15,6 +15,9 @@ public class PlayerCharacterScript : MonoBehaviour
     [SerializeField]
     private float _anchorBreakForce = 100f;
 
+    [SerializeField]
+    private int _grabScoreBonus = 1000;
+
     //========================================================
     //
     //========================================================
@@ -185,7 +188,11 @@ public class PlayerCharacterScript : MonoBehaviour
                             //Debug.Log("end of drag, anchored extremity");
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
-                            _uiManager.AddScore(1000);
+                            if(!anchorScript.usedOnce)
+                            {
+                                anchorScript.usedOnce = true;
+                                _uiManager.AddScore(_grabScoreBonus);
+                            }
 
                             break;
                         }

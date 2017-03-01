@@ -17,6 +17,10 @@ public class CameraScript : MonoBehaviour
     [SerializeField]
     private List<Vector2> _accelerationSteps;
 
+    private int _stepIndex = -1;
+
+    private UIManager _uiManager;
+
     //========================================================
     //
     //========================================================
@@ -33,6 +37,7 @@ public class CameraScript : MonoBehaviour
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
+        _uiManager = FindObjectOfType<UIManager>();
     }
 
     // Update is called once per frame
@@ -49,6 +54,11 @@ public class CameraScript : MonoBehaviour
         {
             if (_playerScript.Altitude >= _accelerationSteps[i].x)
             {
+                if(_stepIndex < i)
+                {
+                    _stepIndex = i;
+                    _uiManager.Faster();
+                }
                 baseSpeed *= _accelerationSteps[i].y;
                 break;
             }

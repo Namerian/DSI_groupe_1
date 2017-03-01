@@ -7,13 +7,14 @@ using DG.Tweening;
 public class UIManager : MonoBehaviour {
 
     public Text scoreText, comboText, addScoreText, altitudeText;
+    public Transform faster;
     public float score; 
     public int combo;
     public Color[] comboColors;
 
 	// Use this for initialization
 	void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
@@ -40,6 +41,15 @@ public class UIManager : MonoBehaviour {
     public void UpdateAltitude(float altitude)
     {
         altitudeText.text = "" + Mathf.Round(altitude) + "m";
+    }
+
+    public void Faster()
+    {
+        Sequence fasterSequence = DOTween.Sequence();
+        fasterSequence.Append(faster.DOScaleY(1f, 0.1f));
+        fasterSequence.Append(faster.DOScaleY(0.5f, 0.5f));
+        fasterSequence.Join(faster.DOShakePosition(1f, 10, 10));
+        fasterSequence.Append(faster.DOScaleY(0f, 0.2f));
     }
 
     public void AddScore(int scoreToAdd)
