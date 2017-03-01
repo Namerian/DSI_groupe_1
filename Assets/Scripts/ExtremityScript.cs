@@ -53,19 +53,29 @@ public class ExtremityScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_hingeJoint != null)
+        if(IsAnchored && this.transform.position.y < Camera.main.transform.position.y - Camera.main.orthographicSize)
+        {
+            Debug.Log("extremity unanchored because out of screen");
+            UnanchorExtremity();
+        }
+
+
+        // I do not know what this code is good for...
+        /*if (_hingeJoint != null)
         {
             if (_hingeJoint.connectedBody != null && IsAnchored == false)
             {
+                Debug.Log("case A");
                 _hingeJoint.enabled = true;
                 IsAnchored = true;
             }
             else if (_hingeJoint.connectedBody == null && IsAnchored == true)
             {
+                Debug.Log("case B");
                 _hingeJoint.enabled = false;
                 IsAnchored = false;
             }
-        }
+        }*/
     }
 
     public void AnchorExtremity(AbstractAnchorScript anchor, float breakForce)
