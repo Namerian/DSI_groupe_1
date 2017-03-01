@@ -54,7 +54,7 @@ public class PlayerCharacterScript : MonoBehaviour
         {
             if (_isDragging)
             {
-                Debug.Log("dragging");
+                //Debug.Log("dragging");
 
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
@@ -125,7 +125,7 @@ public class PlayerCharacterScript : MonoBehaviour
 
                         if (collider.CompareTag("Anchor") && anchorScript.IsInUse == false)
                         {
-                            Debug.Log("end of drag, anchored extremity");
+                            //Debug.Log("end of drag, anchored extremity");
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce); //Dans la fonction AnchorExtremity, le _anchorbreakforce ne s'appliquera que si c'est un Moving Anchor
 
