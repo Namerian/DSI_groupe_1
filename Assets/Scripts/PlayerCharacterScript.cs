@@ -16,11 +16,39 @@ public class PlayerCharacterScript : MonoBehaviour
     private bool _isDragging = false;
     private ExtremityScript _draggedExtremity;
 
+    UIManager uiManager;
+    int numOfAnchoredExtremitiesTest;
+
+    Transform body;
+    float originalYpos, altitude;
+
     // Use this for initialization
     void Start()
     {
         _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
-        Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
+        //Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
+        uiManager = FindObjectOfType<UIManager>();
+        body = transform.Find("body");
+        originalYpos = body.position.y;
+    }
+
+
+    void Update()
+    {
+        numOfAnchoredExtremitiesTest = 0;
+        foreach (ExtremityScript extremity in _extremitiesList)
+        {
+            if (extremity.IsAnchored)
+            {
+                numOfAnchoredExtremitiesTest++;
+            }
+        }
+
+        uiManager.UpdateCombo(numOfAnchoredExtremitiesTest);
+        //Debug.Log(numOfAnchoredExtremitiesTest);
+
+        altitude = body.position.y - originalYpos;
+        uiManager.UpdateAltitude(altitude);
     }
 
     void FixedUpdate()
@@ -80,7 +108,6 @@ public class PlayerCharacterScript : MonoBehaviour
                                 }
                             }
 
-                            //Debug.Log(numOfAnchoredExtremities);
                             ExtremityScript extremityScript = collider.GetComponent<ExtremityScript>();
 
                             if (numOfAnchoredExtremities > 1 || !extremityScript.IsAnchored)
@@ -127,7 +154,8 @@ public class PlayerCharacterScript : MonoBehaviour
                         {
                             //Debug.Log("end of drag, anchored extremity");
 
-                            _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce); //Dans la fonction AnchorExtremity, le _anchorbreakforce ne s'appliquera que si c'est un Moving Anchor
+                            _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
+                            uiManager.AddScore(1000);
 
                             break;
                         }
