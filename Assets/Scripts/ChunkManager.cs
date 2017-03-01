@@ -33,6 +33,10 @@ public class ChunkManager : MonoBehaviour
     private List<ChunkScript> _backgrounds = new List<ChunkScript>();
     private List<float> _chunkSpawnXPositions = new List<float>();
 
+    //======================================================
+    //
+    //======================================================
+
     // Use this for initialization
     void Start()
     {
@@ -62,6 +66,10 @@ public class ChunkManager : MonoBehaviour
             possibleChunkXPos -= _chunkSpawnOffsetInterval;
         }
     }
+
+    //======================================================
+    //
+    //======================================================
 
     // Update is called once per frame
     void Update()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerAnchorScript : AnchorScript
+public class TimerAnchorScript : AbstractAnchorScript
 {
     [SerializeField]
     private float _maxUseTime = 2f;
@@ -27,5 +27,20 @@ public class TimerAnchorScript : AnchorScript
 
             _useTimer += Time.deltaTime;
         }
+    }
+
+    private void Initialize(TimerAnchorScript script)
+    {
+        _maxUseTime = script._maxUseTime;
+    }
+
+    public override void Respawn()
+    {
+        GameObject go = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/Anchors/TimerAnchor"), this.transform.parent);
+        go.transform.position = this.transform.position;
+
+        go.GetComponent<TimerAnchorScript>().Initialize(this);
+
+        Destroy(this.gameObject);
     }
 }
