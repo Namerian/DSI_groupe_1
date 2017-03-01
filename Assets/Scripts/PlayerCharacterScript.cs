@@ -148,7 +148,7 @@ public class PlayerCharacterScript : MonoBehaviour
                 {
                     foreach (Collider2D collider in colliders)
                     {
-                        AnchorScript anchorScript = collider.GetComponent<AnchorScript>();
+                        AbstractAnchorScript anchorScript = collider.GetComponent<AbstractAnchorScript>();
 
                         if (collider.CompareTag("Anchor") && anchorScript.IsInUse == false)
                         {

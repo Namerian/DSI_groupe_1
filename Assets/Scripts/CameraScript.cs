@@ -48,7 +48,7 @@ public class CameraScript : MonoBehaviour
 
         if(playerYPos > speedUpLimit)
         {
-            cameraTranslation.y += ((playerYPos - speedUpLimit) / Camera.main.orthographicSize) * _scrollSpeed * 2 * Time.fixedDeltaTime;
+            cameraTranslation.y += ((playerYPos - speedUpLimit) / Camera.main.orthographicSize) * _scrollSpeed * 5 * Time.fixedDeltaTime;
         }
 
         //*****************************************
