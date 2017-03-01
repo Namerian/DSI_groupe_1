@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class MovingAnchorScript : AbstractAnchorScript
 {
+    //========================================================
+    //
+    //========================================================
+
     [SerializeField]
     private float _yOffset = 1f;
     [SerializeField]
     private float _xOffset = 1f;
     [SerializeField]
     private float _speed = 1f;
+
+    //========================================================
+    //
+    //========================================================
 
     private Vector3 _basePos;
     private float _timer;
@@ -18,12 +26,20 @@ public class MovingAnchorScript : AbstractAnchorScript
 
     Rigidbody2D rb;
 
+    //========================================================
+    //
+    //========================================================
+
     // Use this for initialization
     void Start()
     {
         _basePos = this.transform.position;
         rb = GetComponent<Rigidbody2D>();
     }
+
+    //========================================================
+    //
+    //========================================================
 
     // Update is called once per frame
     void Update()
@@ -37,10 +53,24 @@ public class MovingAnchorScript : AbstractAnchorScript
         else if (_xOffset == 0) rb.MovePosition(new Vector3(_basePos.x, _basePos.y + Mathf.PingPong(_timer, _yOffset), _basePos.z));
     }
 
+    //========================================================
+    //
+    //========================================================
+
+    private void Initialize(MovingAnchorScript script)
+    {
+        _yOffset = script._yOffset;
+        _xOffset = script._xOffset;
+        _speed = script._speed;
+    }
+
     public override void Respawn()
     {
         GameObject go = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/Anchors/MovingAnchor"), this.transform.parent);
         go.transform.position = this.transform.position;
+
+        go.GetComponent<MovingAnchorScript>().Initialize(this);
+
         Destroy(this.gameObject);
     }
 }
