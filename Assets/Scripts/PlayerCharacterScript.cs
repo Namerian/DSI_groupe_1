@@ -5,51 +5,73 @@ using UnityEngine.SceneManagement;
 
 public class PlayerCharacterScript : MonoBehaviour
 {
+    //========================================================
+    //
+    //========================================================
+
     [SerializeField]
     private float _draggingMultiplyer = 500f;
 
     [SerializeField]
     private float _anchorBreakForce = 100f;
 
+    //========================================================
+    //
+    //========================================================
+
     private List<ExtremityScript> _extremitiesList;
 
     private bool _isDragging = false;
     private ExtremityScript _draggedExtremity;
 
-    UIManager uiManager;
-    int numOfAnchoredExtremitiesTest;
+    private UIManager _uiManager;
+    private int _numOfAnchoredExtremitiesTest;
 
-    Transform body;
-    float originalYpos, altitude;
+    private Transform _body;
+    private float _originalYpos;
+    private float _altitude;
+
+    //========================================================
+    //
+    //========================================================
+
+    public float Altitude { get { return _altitude; } }
 
     // Use this for initialization
     void Start()
     {
         _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
         //Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
-        uiManager = FindObjectOfType<UIManager>();
-        body = transform.Find("body");
-        originalYpos = body.position.y;
+        _uiManager = FindObjectOfType<UIManager>();
+        _body = transform.Find("body");
+        _originalYpos = _body.position.y;
     }
 
+    //========================================================
+    //
+    //========================================================
 
     void Update()
     {
-        numOfAnchoredExtremitiesTest = 0;
+        _numOfAnchoredExtremitiesTest = 0;
         foreach (ExtremityScript extremity in _extremitiesList)
         {
             if (extremity.IsAnchored)
             {
-                numOfAnchoredExtremitiesTest++;
+                _numOfAnchoredExtremitiesTest++;
             }
         }
 
-        uiManager.UpdateCombo(numOfAnchoredExtremitiesTest);
+        _uiManager.UpdateCombo(_numOfAnchoredExtremitiesTest);
         //Debug.Log(numOfAnchoredExtremitiesTest);
 
-        altitude = body.position.y - originalYpos;
-        uiManager.UpdateAltitude(altitude);
+        _altitude = _body.position.y - _originalYpos;
+        _uiManager.UpdateAltitude(_altitude);
     }
+
+    //========================================================
+    //
+    //========================================================
 
     void FixedUpdate()
     {
@@ -155,7 +177,7 @@ public class PlayerCharacterScript : MonoBehaviour
                             //Debug.Log("end of drag, anchored extremity");
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
-                            uiManager.AddScore(1000);
+                            _uiManager.AddScore(1000);
 
                             break;
                         }
@@ -169,6 +191,10 @@ public class PlayerCharacterScript : MonoBehaviour
             }
         }
     }
+
+    //========================================================
+    //
+    //========================================================
 
     private void ReloadScene()
     {
