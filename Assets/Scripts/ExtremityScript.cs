@@ -73,7 +73,7 @@ public class ExtremityScript : MonoBehaviour
         }
 
 
-        if(IsAnchored && _hingeJoint.connectedBody == null)
+        if(_hingeJoint != null && IsAnchored && _hingeJoint.connectedBody == null)
         {
             _hingeJoint.enabled = false;
             IsAnchored = false;
