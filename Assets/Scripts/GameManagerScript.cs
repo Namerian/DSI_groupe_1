@@ -31,6 +31,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<CharacterListElement> _characterPrefabs;
 
+    [SerializeField]
+    private List<MaterialListElement> _backgroundMaterials;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -52,14 +55,9 @@ public class GameManagerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        StartGame();
+        EnvironmentName = "Blue";
+        //StartGame();
     }
-
-    // Update is called once per frame
-    /*void Update()
-    {
-
-    }*/
 
     //==========================================================================================
     //
@@ -68,6 +66,25 @@ public class GameManagerScript : MonoBehaviour
     public int DifficultyLevel { get; set; }
 
     public string CharacterName { get; set; }
+
+    public string EnvironmentName { get; set; }
+
+    public Material BackgroundMaterial
+    {
+        get
+        {
+            foreach(MaterialListElement element in _backgroundMaterials)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.material;
+                }
+            }
+
+            Debug.LogError("Could not find material for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
 
     //==========================================================================================
     //
@@ -122,4 +139,11 @@ public class CharacterListElement
 {
     public string charName;
     public GameObject prefab;
+}
+
+[System.Serializable]
+public class MaterialListElement
+{
+    public string environmentName;
+    public Material material;
 }
