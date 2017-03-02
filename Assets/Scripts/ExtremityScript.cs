@@ -73,22 +73,11 @@ public class ExtremityScript : MonoBehaviour
         }
 
 
-        // I do not know what this code is good for...
-        /*if (_hingeJoint != null)
+        if(_hingeJoint != null && IsAnchored && _hingeJoint.connectedBody == null)
         {
-            if (_hingeJoint.connectedBody != null && IsAnchored == false)
-            {
-                Debug.Log("case A");
-                _hingeJoint.enabled = true;
-                IsAnchored = true;
-            }
-            else if (_hingeJoint.connectedBody == null && IsAnchored == true)
-            {
-                Debug.Log("case B");
-                _hingeJoint.enabled = false;
-                IsAnchored = false;
-            }
-        }*/
+            _hingeJoint.enabled = false;
+            IsAnchored = false;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
