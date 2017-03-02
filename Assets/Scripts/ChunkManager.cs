@@ -13,9 +13,11 @@ public class ChunkManager : MonoBehaviour
     [SerializeField]
     private GameObject _backgroundPrefab;
 
-    [Space(10)]
     [SerializeField]
     private GameObject _startChunk;
+
+    [SerializeField]
+    private GameObject _rockPrefab;
 
     [Header("Parameters")]
 
@@ -24,6 +26,12 @@ public class ChunkManager : MonoBehaviour
 
     [SerializeField]
     private float _chunkSpawnOffsetInterval = 0.2f;
+
+    [SerializeField]
+    private float _minRockSpawnTimer = 2f;
+
+    [SerializeField]
+    private float _maxRockRespawnTimer = 6f;
 
     //======================================================
     //
@@ -65,6 +73,8 @@ public class ChunkManager : MonoBehaviour
             _chunkSpawnXPositions.Add(possibleChunkXPos);
             possibleChunkXPos -= _chunkSpawnOffsetInterval;
         }
+
+        Invoke("SpawnRock", Random.Range(_minRockSpawnTimer, _maxRockRespawnTimer));
     }
 
     //======================================================
@@ -136,5 +146,24 @@ public class ChunkManager : MonoBehaviour
             _backgrounds.Remove(oldestBg);
             Destroy(oldestBg.gameObject);
         }
+    }
+
+    //======================================================
+    //
+    //======================================================
+
+    private void SpawnRock()
+    {
+        float halfScreenWidth = ((Camera.main.orthographicSize * 2) / Camera.main.pixelHeight) * Camera.main.pixelWidth * 0.5f;
+
+        float yPos = Camera.main.transform.position.y + 3 * Camera.main.orthographicSize;
+        float xPos = Random.Range(Camera.main.transform.position.x-halfScreenWidth, Camera.main.transform.position.x+halfScreenWidth);
+
+        Debug.Log("Spawning Rock, xPos=" + xPos);
+
+        GameObject rock = Instantiate(_rockPrefab, this.transform);
+        rock.transform.position = new Vector3(xPos, yPos);
+
+        Invoke("SpawnRock", Random.Range(_minRockSpawnTimer, _maxRockRespawnTimer));
     }
 }

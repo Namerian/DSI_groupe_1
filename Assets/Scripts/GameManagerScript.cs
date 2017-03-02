@@ -53,13 +53,6 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    // Use this for initialization
-    void Start()
-    {
-        EnvironmentName = "Blue";
-        //StartGame();
-    }
-
     //==========================================================================================
     //
     //==========================================================================================

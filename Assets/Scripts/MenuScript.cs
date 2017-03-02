@@ -68,6 +68,17 @@ public class MenuScript : MonoBehaviour {
     public void LoadLevel(int difficulty)
     {
         GameManagerScript.Instance.DifficultyLevel = difficulty;
+
+        switch (difficulty)
+        {
+            case 0:
+                GameManagerScript.Instance.EnvironmentName = "Ocean";
+                break;
+            case 1:
+                GameManagerScript.Instance.EnvironmentName = "Jungle";
+                break;
+        }
+
         GameManagerScript.Instance.StartGame();
     }
 
