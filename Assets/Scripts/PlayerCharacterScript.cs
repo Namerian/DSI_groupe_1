@@ -220,7 +220,9 @@ public class PlayerCharacterScript : MonoBehaviour
 
     private void ReloadScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        GameManagerScript.Instance.LoadMenu((int)UIManager.Instance.score);
     }
 
     private void AllowAnchoring()

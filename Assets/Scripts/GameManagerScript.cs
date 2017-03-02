@@ -49,7 +49,7 @@ public class GameManagerScript : MonoBehaviour
         else
         {
             Debug.LogError("GameManager has already been instantiated!");
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 
@@ -87,6 +87,10 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public int LevelScore { get; private set; }
+
+    public int SessionScore { get; private set; }
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -96,42 +100,57 @@ public class GameManagerScript : MonoBehaviour
         SceneManager.LoadScene("Scenes/TestLevel");
     }
 
+    public void LoadMenu(int levelScore)
+    {
+        LevelScore = levelScore;
+        SessionScore += levelScore;
+
+        SceneManager.LoadScene("Scenes/Menu");
+    } 
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if(scene.name != "TestLevel")
+        if(scene.name == "TestLevel")
         {
-            return;
-        }
+            int charIndex = 0;
 
-        int charIndex = 0;
-
-        for (int i = 0; i < _characterPrefabs.Count; i++)
-        {
-            CharacterListElement element = _characterPrefabs[i];
-
-            if (CharacterName == element.charName)
+            for (int i = 0; i < _characterPrefabs.Count; i++)
             {
-                charIndex = i;
+                CharacterListElement element = _characterPrefabs[i];
+
+                if (CharacterName == element.charName)
+                {
+                    charIndex = i;
+                }
             }
+
+            GameObject startChunk = GameObject.Find("StartChunk");
+            Rigidbody2D anchor1Rigidbody = startChunk.transform.Find("Anchors/Anchor_1").GetComponent<Rigidbody2D>();
+            Rigidbody2D anchor2Rigidbody = startChunk.transform.Find("Anchors/Anchor_2").GetComponent<Rigidbody2D>();
+
+            GameObject character = Instantiate<GameObject>(_characterPrefabs[charIndex].prefab);
+
+            HingeJoint2D charLeftHand = GameObject.Find("Hand1").GetComponent<HingeJoint2D>();
+            HingeJoint2D charRightHand = GameObject.Find("Hand2").GetComponent<HingeJoint2D>();
+
+            float charYPos = anchor1Rigidbody.transform.position.y - (character.transform.position.y - charLeftHand.transform.position.y);
+
+            character.transform.position = new Vector3(0, charYPos, 0);
+            anchor1Rigidbody.transform.position = charLeftHand.transform.position;
+            anchor2Rigidbody.transform.position = charRightHand.transform.position;
+
+            charLeftHand.connectedBody = anchor1Rigidbody;
+            charRightHand.connectedBody = anchor2Rigidbody;
         }
+        else if(scene.name == "Menu")
+        {
 
-        GameObject startChunk = GameObject.Find("StartChunk");
-        Rigidbody2D anchor1Rigidbody = startChunk.transform.Find("Anchors/Anchor_1").GetComponent<Rigidbody2D>();
-        Rigidbody2D anchor2Rigidbody = startChunk.transform.Find("Anchors/Anchor_2").GetComponent<Rigidbody2D>();
-
-        GameObject character = Instantiate<GameObject>(_characterPrefabs[charIndex].prefab);
-
-        HingeJoint2D charLeftHand = GameObject.Find("Hand1").GetComponent<HingeJoint2D>();
-        HingeJoint2D charRightHand = GameObject.Find("Hand2").GetComponent<HingeJoint2D>();
-
-        float charYPos = anchor1Rigidbody.transform.position.y - (character.transform.position.y - charLeftHand.transform.position.y);
-
-        character.transform.position = new Vector3(0, charYPos, 0);
-        anchor1Rigidbody.transform.position = charLeftHand.transform.position;
-        anchor2Rigidbody.transform.position = charRightHand.transform.position;
-
-        charLeftHand.connectedBody = anchor1Rigidbody;
-        charRightHand.connectedBody = anchor2Rigidbody;
+        }
+        
     }
 }
 
