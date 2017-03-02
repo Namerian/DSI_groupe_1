@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     {
         get
         {
-            if(_instance == null)
+            if (_instance == null)
             {
                 Debug.LogError("UIManager is not instantiated!");
             }
@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        if(_instance == null)
+        if (_instance == null)
         {
             _instance = this;
         }
@@ -76,7 +76,16 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCombo(int comb)
     {
-        if (comb > combo) comboText.transform.DOShakePosition(0.5f, comb * 2, 10);
+        if (comb == combo)
+        {
+            return;
+        }
+
+        if (comb > combo)
+        {
+            comboText.transform.DOShakePosition(0.5f, comb * 2, 10);
+        }
+
         combo = comb;
         comboText.text = "x" + combo;
         comboText.fontSize = (60 + (8 * combo));
