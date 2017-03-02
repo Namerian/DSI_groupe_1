@@ -56,4 +56,15 @@ public class MenuScript : MonoBehaviour {
             yield return null;
         }
     }
+
+    public void LoadLevel(int difficulty)
+    {
+        GameManagerScript.Instance.DifficultyLevel = difficulty;
+        GameManagerScript.Instance.StartGame();
+    }
+
+    public void ChangeCharacter(string name)
+    {
+        GameManagerScript.Instance.CharacterName = name;
+    }
 }

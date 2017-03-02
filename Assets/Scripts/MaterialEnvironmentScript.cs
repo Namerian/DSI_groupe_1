@@ -9,9 +9,4 @@ public class MaterialEnvironmentScript : MonoBehaviour {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         renderer.material = GameManagerScript.Instance.BackgroundMaterial;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
