@@ -16,7 +16,7 @@ public class MenuScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        //StartCoroutine(JaugeFill());
+
 	}
 	
 	// Update is called once per frame
@@ -25,22 +25,24 @@ public class MenuScript : MonoBehaviour {
 	}
 
 
-    public void GameResults()
+    public void GameResults() //à appeler quand on retourne à la scène menu après une partie : affiche directement l'écran de progression
     {
         activePanel.SetActive(false);
         progressPanel.SetActive(true);
         activePanel = progressPanel;
     }
 
-    public void ChangePanel(GameObject panel)
+    public void ChangePanel(GameObject panel) //permet de changer d'écran pour naviguer entre les menus (appel via boutons)
     {
         activePanel.SetActive(false);
         panel.SetActive(true);
         activePanel = panel;
     }
 
-    
-    IEnumerator JaugeFill() //Ne fonctionne pas très bien
+    //Ci-dessous, test de coroutine pour remplir la jauge d'XP, ne fonctionnait pas parfaitement
+
+    /*
+    IEnumerator JaugeFill() 
     {
         float addToJauge = 0;
         float addToJaugeEachFrame = scoreToAdd / 100;
@@ -64,6 +66,7 @@ public class MenuScript : MonoBehaviour {
             yield return null;
         }
     }
+    */
 
     public void LoadLevel(int difficulty)
     {
