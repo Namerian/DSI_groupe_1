@@ -75,8 +75,13 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Scenes/TestLevel");
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
+        SceneManager.LoadScene("Scenes/TestLevel");
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
         int charIndex = 0;
 
         for (int i = 0; i < _characterPrefabs.Count; i++)
@@ -90,12 +95,13 @@ public class GameManagerScript : MonoBehaviour
         }
 
         GameObject startChunk = GameObject.Find("StartChunk");
-        Rigidbody2D anchor1Rigidbody = startChunk.transform.Find("Anchor_1").GetComponent<Rigidbody2D>();
-        Rigidbody2D anchor2Rigidbody = startChunk.transform.Find("Anchor_2").GetComponent<Rigidbody2D>();
+        Rigidbody2D anchor1Rigidbody = startChunk.transform.Find("Anchors/Anchor_1").GetComponent<Rigidbody2D>();
+        Rigidbody2D anchor2Rigidbody = startChunk.transform.Find("Anchors/Anchor_2").GetComponent<Rigidbody2D>();
 
         GameObject character = Instantiate<GameObject>(_characterPrefabs[charIndex].prefab);
-        HingeJoint2D charLeftHand = character.transform.Find("Hand1").GetComponent<HingeJoint2D>();
-        HingeJoint2D charRightHand = character.transform.Find("Hand2").GetComponent<HingeJoint2D>();
+
+        HingeJoint2D charLeftHand = GameObject.Find("Hand1").GetComponent<HingeJoint2D>();
+        HingeJoint2D charRightHand = GameObject.Find("Hand2").GetComponent<HingeJoint2D>();
 
         float charYPos = anchor1Rigidbody.transform.position.y - (character.transform.position.y - charLeftHand.transform.position.y);
 
@@ -105,6 +111,9 @@ public class GameManagerScript : MonoBehaviour
 
         charLeftHand.connectedBody = anchor1Rigidbody;
         charRightHand.connectedBody = anchor2Rigidbody;
+
+        //
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 
