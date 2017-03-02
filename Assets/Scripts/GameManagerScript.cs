@@ -80,9 +80,11 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    public int LevelScore { get; private set; }
-
     public int SessionScore { get; private set; }
+
+    public int TotalScore { get; private set; }
+
+    public int OldTotalScore { get { return TotalScore - SessionScore; } }
 
     //==========================================================================================
     //
@@ -95,8 +97,8 @@ public class GameManagerScript : MonoBehaviour
 
     public void LoadMenu(int levelScore)
     {
-        LevelScore = levelScore;
-        SessionScore += levelScore;
+        SessionScore = levelScore;
+        TotalScore += levelScore;
 
         SceneManager.LoadScene("Scenes/Menu");
     } 

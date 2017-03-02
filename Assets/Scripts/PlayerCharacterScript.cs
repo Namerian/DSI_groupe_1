@@ -252,8 +252,6 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
 
     private void ReloadScene()
     {
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
         GameManagerScript.Instance.LoadMenu((int)UIManager.Instance.score);
     }
 
