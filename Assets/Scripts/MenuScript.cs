@@ -11,7 +11,7 @@ public class MenuScript : MonoBehaviour {
     public float[] levelsXP;
     public int currentLevel;
     [SerializeField]
-    private GameObject activePanel;
+    private GameObject activePanel, progressPanel;
 
 	// Use this for initialization
 	void Start ()
@@ -23,6 +23,14 @@ public class MenuScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+
+    public void GameResults()
+    {
+        activePanel.SetActive(false);
+        progressPanel.SetActive(true);
+        activePanel = progressPanel;
+    }
 
     public void ChangePanel(GameObject panel)
     {

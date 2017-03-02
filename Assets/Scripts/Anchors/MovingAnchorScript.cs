@@ -15,6 +15,9 @@ public class MovingAnchorScript : AbstractAnchorScript
     [SerializeField]
     private float _speed = 1f;
 
+    [SerializeField]
+    private Sprite horizontal;
+
     //========================================================
     //
     //========================================================
@@ -35,6 +38,7 @@ public class MovingAnchorScript : AbstractAnchorScript
     {
         _basePos = this.transform.position;
         rb = GetComponent<Rigidbody2D>();
+        if (_xOffset != 0) GetComponentInChildren<SpriteRenderer>().sprite = horizontal;
     }
 
     //========================================================
