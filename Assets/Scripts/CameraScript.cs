@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    //========================================================
-    //
-    //========================================================
+    //==========================================================================================
+    // editable variables
+    //==========================================================================================
 
     [SerializeField]
     private float _scrollSpeed = 1f;
@@ -17,27 +17,24 @@ public class CameraScript : MonoBehaviour
     [SerializeField]
     private List<Vector2> _accelerationSteps;
 
-    private int _stepIndex = -1;
-
-    private UIManager _uiManager;
-
-    //========================================================
-    //
-    //========================================================
+    //==========================================================================================
+    // other variable
+    //==========================================================================================
 
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
-    //========================================================
-    //
-    //========================================================
+    private int _stepIndex = -1;
+
+    //==========================================================================================
+    // monobehaviour methods
+    //==========================================================================================
 
     // Use this for initialization
     void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
-        _uiManager = FindObjectOfType<UIManager>();
     }
 
     // Update is called once per frame
@@ -57,7 +54,7 @@ public class CameraScript : MonoBehaviour
                 if(_stepIndex < i)
                 {
                     _stepIndex = i;
-                    _uiManager.Faster();
+                    UIManager.Instance.Faster();
                 }
                 baseSpeed *= _accelerationSteps[i].y;
                 break;

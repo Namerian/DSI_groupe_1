@@ -4,25 +4,70 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UIManager : MonoBehaviour {
+public class UIManager : MonoBehaviour
+{
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    private static UIManager _instance;
+
+    public static UIManager Instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                Debug.LogError("UIManager is not instantiated!");
+            }
+
+            return _instance;
+        }
+    }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
 
     public Text scoreText, comboText, addScoreText, altitudeText;
     public Transform faster;
-    public float score; 
+    public float score;
     public int combo;
     public Color[] comboColors;
 
-	// Use this for initialization
-	void Start () {
+    //==========================================================================================
+    //
+    //==========================================================================================
 
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    void Awake()
+    {
+        if(_instance == null)
+        {
+            _instance = this;
+        }
+        else
+        {
+            Debug.LogError("UIManager has already been instantiated!");
+            Destroy(this);
+        }
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         score += combo;
         UpdateScoreText();
-	}
+    }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
 
     public void UpdateScoreText()
     {
@@ -31,7 +76,7 @@ public class UIManager : MonoBehaviour {
 
     public void UpdateCombo(int comb)
     {
-        if (comb > combo) comboText.transform.DOShakePosition(0.5f, comb*2, 10);
+        if (comb > combo) comboText.transform.DOShakePosition(0.5f, comb * 2, 10);
         combo = comb;
         comboText.text = "x" + combo;
         comboText.fontSize = (60 + (8 * combo));
