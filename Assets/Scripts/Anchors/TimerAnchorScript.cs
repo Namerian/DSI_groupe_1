@@ -9,6 +9,8 @@ public class TimerAnchorScript : AbstractAnchorScript
 
     private float _useTimer = 0f;
 
+    bool startShaking;
+
     // Use this for initialization
     void Start()
     {
@@ -18,13 +20,18 @@ public class TimerAnchorScript : AbstractAnchorScript
     // Update is called once per frame
     void Update()
     {
-        if (IsInUse)
+        if (IsInUse && !startShaking)
         {
-            if(_useTimer > _maxUseTime)
+            startShaking = true;
+            GetComponentInChildren<Shake>().shaking = true;
+        }
+
+        if(startShaking)
+        {
+            if (_useTimer > _maxUseTime)
             {
                 Destroy(this.gameObject);
             }
-
             _useTimer += Time.deltaTime;
         }
     }

@@ -11,7 +11,7 @@ public class MenuScript : MonoBehaviour {
     public float[] levelsXP;
     public int currentLevel;
     [SerializeField]
-    private GameObject activePanel;
+    private GameObject activePanel, progressPanel;
 
 	// Use this for initialization
 	void Start ()
@@ -23,6 +23,14 @@ public class MenuScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+
+    public void GameResults()
+    {
+        activePanel.SetActive(false);
+        progressPanel.SetActive(true);
+        activePanel = progressPanel;
+    }
 
     public void ChangePanel(GameObject panel)
     {
@@ -60,6 +68,17 @@ public class MenuScript : MonoBehaviour {
     public void LoadLevel(int difficulty)
     {
         GameManagerScript.Instance.DifficultyLevel = difficulty;
+
+        switch (difficulty)
+        {
+            case 0:
+                GameManagerScript.Instance.EnvironmentName = "Ocean";
+                break;
+            case 1:
+                GameManagerScript.Instance.EnvironmentName = "Jungle";
+                break;
+        }
+
         GameManagerScript.Instance.StartGame();
     }
 

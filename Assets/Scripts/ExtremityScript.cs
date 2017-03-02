@@ -42,6 +42,8 @@ public class ExtremityScript : MonoBehaviour
 
     public bool IsAnchored { get; private set; }
 
+    public IRockCollisionListener RockCollisionListener { get; set; }
+
     //==========================================================================================
     // monobehaviour methods
     //==========================================================================================
@@ -68,7 +70,7 @@ public class ExtremityScript : MonoBehaviour
     {
         if(IsAnchored && this.transform.position.y < Camera.main.transform.position.y - Camera.main.orthographicSize)
         {
-            Debug.Log("extremity unanchored because out of screen");
+            //Debug.Log("extremity unanchored because out of screen");
             UnanchorExtremity();
         }
 
@@ -84,9 +86,19 @@ public class ExtremityScript : MonoBehaviour
     {
         if (other.CompareTag("BonusObject"))
         {
-            Debug.Log("Collision with Bonus Object");
+            Debug.Log("Collision with Bonus Object!");
             UIManager.Instance.AddScore((int)other.GetComponent<BonusObjectScript>().BonusScore);
             Destroy(other.gameObject);
+        } 
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Rock"))
+        {
+            Debug.Log("Collision with Rock!");
+            UnanchorExtremity();
+            RockCollisionListener.OnRockCollision();
         }
     }
 
