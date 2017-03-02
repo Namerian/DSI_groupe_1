@@ -14,11 +14,19 @@ public class CameraScript : MonoBehaviour
     [SerializeField]
     private float _maxHorizontalOffset = 2f;
 
+    [SerializeField]
+    private List<Vector2> _accelerationSteps;
+
+    private int _stepIndex = -1;
+
+    private UIManager _uiManager;
+
     //========================================================
     //
     //========================================================
 
     private Transform _playerTransform;
+    private PlayerCharacterScript _playerScript;
 
     //========================================================
     //
@@ -28,6 +36,8 @@ public class CameraScript : MonoBehaviour
     void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
+        _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
+        _uiManager = FindObjectOfType<UIManager>();
     }
 
     // Update is called once per frame
@@ -38,7 +48,23 @@ public class CameraScript : MonoBehaviour
         //*****************************************
         // normal vertical movement
 
-        cameraTranslation.y += _scrollSpeed * Time.fixedDeltaTime;
+        float baseSpeed = _scrollSpeed * Time.fixedDeltaTime;
+
+        for (int i = _accelerationSteps.Count; i-- > 0;)
+        {
+            if (_playerScript.Altitude >= _accelerationSteps[i].x)
+            {
+                if(_stepIndex < i)
+                {
+                    _stepIndex = i;
+                    _uiManager.Faster();
+                }
+                baseSpeed *= _accelerationSteps[i].y;
+                break;
+            }
+        }
+
+        cameraTranslation.y += baseSpeed;
 
         //*****************************************
         // additional vertical movement (when the player is too near of the screen-top)
@@ -46,7 +72,7 @@ public class CameraScript : MonoBehaviour
         float speedUpLimit = this.transform.position.y;
         float playerYPos = _playerTransform.position.y;
 
-        if(playerYPos > speedUpLimit)
+        if (playerYPos > speedUpLimit)
         {
             cameraTranslation.y += ((playerYPos - speedUpLimit) / Camera.main.orthographicSize) * _scrollSpeed * 5 * Time.fixedDeltaTime;
         }
