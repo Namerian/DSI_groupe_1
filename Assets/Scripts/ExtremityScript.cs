@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class ExtremityScript : MonoBehaviour
 {
-    private HingeJoint2D _hingeJoint;
+    //==========================================================================================
+    // variables
+    //==========================================================================================
 
-    private bool _isMoving;
-    private GameObject _helpCircle;
-    private AbstractAnchorScript _anchor;
+    private HingeJoint2D _hingeJoint; //the hingejoint component of the extremity
+
+    private bool _isMoving; //wether the extremity is being dragged, used to show the ui circle
+    private GameObject _helpCircle; //the ui circle that is shown when the extremity is being dragged
+
+    private AbstractAnchorScript _anchor; //the anchor this extremity is anchored to
+
+    //==========================================================================================
+    // public properties
+    //==========================================================================================
 
     public bool IsMoving
     {
@@ -32,6 +41,10 @@ public class ExtremityScript : MonoBehaviour
     }
 
     public bool IsAnchored { get; private set; }
+
+    //==========================================================================================
+    // monobehaviour methods
+    //==========================================================================================
 
     // Use this for initialization
     void Start()
@@ -77,6 +90,20 @@ public class ExtremityScript : MonoBehaviour
             }
         }*/
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("BonusObject"))
+        {
+            Debug.Log("Collision with Bonus Object");
+            UIManager.Instance.AddScore((int)other.GetComponent<BonusObjectScript>().BonusScore);
+            Destroy(other.gameObject);
+        }
+    }
+
+    //==========================================================================================
+    // public methods
+    //==========================================================================================
 
     public void AnchorExtremity(AbstractAnchorScript anchor, float breakForce)
     {
