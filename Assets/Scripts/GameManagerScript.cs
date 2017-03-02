@@ -44,7 +44,6 @@ public class GameManagerScript : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -92,6 +91,8 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         SceneManager.LoadScene("Scenes/TestLevel");
     }
 
@@ -143,7 +144,8 @@ public class GameManagerScript : MonoBehaviour
         }
         else if(scene.name == "Menu")
         {
-
+            MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
+            menu.SwitchPanel(menu.ProgressionPanel);
         }
         
     }
