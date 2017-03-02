@@ -8,14 +8,18 @@ public class CameraScript : MonoBehaviour
     // editable variables
     //==========================================================================================
 
+    [Header("index=difficulty, y=baseSpeed")]
     [SerializeField]
-    private float _scrollSpeed = 1f;
+    private List<float> _baseSpeeds;
 
-    [SerializeField]
-    private float _maxHorizontalOffset = 2f;
-
+    [Space(10)]
+    [Header("x=altitude, y=speedMultiplier")]
     [SerializeField]
     private List<Vector2> _accelerationSteps;
+
+    [Space(10)]
+    [SerializeField]
+    private float _maxHorizontalOffset = 2f;
 
     //==========================================================================================
     // other variable
@@ -24,6 +28,7 @@ public class CameraScript : MonoBehaviour
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
+    private float _scrollSpeed = 0.3f;
     private int _stepIndex = -1;
 
     //==========================================================================================
@@ -35,6 +40,11 @@ public class CameraScript : MonoBehaviour
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
+
+        if(GameManagerScript.Instance != null)
+        {
+            _scrollSpeed = _baseSpeeds[GameManagerScript.Instance.DifficultyLevel];
+        }
     }
 
     // Update is called once per frame
