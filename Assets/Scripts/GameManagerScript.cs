@@ -44,6 +44,7 @@ public class GameManagerScript : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -92,13 +93,16 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
         SceneManager.LoadScene("Scenes/TestLevel");
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        if(scene.name != "TestLevel")
+        {
+            return;
+        }
+
         int charIndex = 0;
 
         for (int i = 0; i < _characterPrefabs.Count; i++)
@@ -128,9 +132,6 @@ public class GameManagerScript : MonoBehaviour
 
         charLeftHand.connectedBody = anchor1Rigidbody;
         charRightHand.connectedBody = anchor2Rigidbody;
-
-        //
-        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 
