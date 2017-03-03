@@ -32,7 +32,7 @@ public class GameManagerScript : MonoBehaviour
     private List<CharacterListElement> _characterPrefabs;
 
     [SerializeField]
-    private List<MaterialListElement> _backgroundMaterials;
+    private List<ColourListElement> _backgroundColours;
 
     [SerializeField]
     private List<AmbianceBgListElement> _ambiancePrefabs;
@@ -77,20 +77,20 @@ public class GameManagerScript : MonoBehaviour
 
     public string EnvironmentName { get; set; }
 
-    public Material BackgroundMaterial
+    public Color BackgroundColour
     {
         get
         {
-            foreach (MaterialListElement element in _backgroundMaterials)
+            foreach (ColourListElement element in _backgroundColours)
             {
                 if (element.environmentName == EnvironmentName)
                 {
-                    return element.material;
+                    return element.colour;
                 }
             }
 
             Debug.LogError("Could not find background material for environment " + EnvironmentName + "!");
-            return null;
+            return Color.magenta;
         }
     }
 
@@ -297,4 +297,11 @@ public class SpriteListElement
 {
     public string environmentName;
     public Sprite sprite;
+}
+
+[System.Serializable]
+public class ColourListElement
+{
+    public string environmentName;
+    public Color colour;
 }

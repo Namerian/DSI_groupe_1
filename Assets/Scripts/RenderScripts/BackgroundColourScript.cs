@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackgroundMaterialScript : MonoBehaviour
+public class BackgroundColourScript : MonoBehaviour
 {
 
     // Use this for initialization
     void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        Material material = GameManagerScript.Instance.BackgroundMaterial;
+        Color colour = GameManagerScript.Instance.BackgroundColour;
 
-        if (material != null)
+        if (colour != null)
         {
-            renderer.material = material;
+            renderer.color = colour;
         }
     }
 }
