@@ -36,6 +36,8 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
     private float _originalYpos;
     private float _altitude;
 
+    private bool _isDead;
+
     //========================================================
     //
     //========================================================
@@ -85,6 +87,11 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
 
     void FixedUpdate()
     {
+        if (_isDead)
+        {
+            return;
+        }
+
         //******************************************************
         // DEATH
 
@@ -103,12 +110,13 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
         if (isDead)
         {
             Debug.Log("Player Died!");
+            _isDead = true;
 
             Invoke("ReloadScene", 0.5f);
         }
 
         //******************************************************
-        // MOVEMENT
+        // DRAG AND DROP MOVEMENT
 
         if (Input.GetMouseButton(0))
         {

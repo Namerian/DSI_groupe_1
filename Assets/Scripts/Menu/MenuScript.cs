@@ -33,22 +33,35 @@ public class MenuScript : MonoBehaviour
     //
     //=====================================================================================
 
-    void Awake ()
+    void Awake()
     {
         TitlePanel = this.transform.Find("Titre").GetComponent<IMenuPanel>();
         LevelSelectionPanel = this.transform.Find("SelectionNiveau").GetComponent<IMenuPanel>();
         ProgressionPanel = this.transform.Find("Progression").GetComponent<IMenuPanel>();
         SettingsPanel = this.transform.Find("Credits&Settings").GetComponent<IMenuPanel>();
-	}
+    }
+
+    void Start()
+    {
+        if (GameManagerScript.Instance.SessionScore != 0)
+        {
+            SwitchPanel(ProgressionPanel);
+        }
+        else
+        {
+            SwitchPanel(TitlePanel);
+        }
+    }
 
     // Update is called once per frame
-    void Update () {
-		if(_currentPanel == null)
+    void Update()
+    {
+        /*if(_currentPanel == null)
         {
             //Debug.Log("Menu: currentPanel is null!");
             SwitchPanel(TitlePanel);
-        }
-	}
+        }*/
+    }
 
     //=====================================================================================
     //
@@ -58,7 +71,7 @@ public class MenuScript : MonoBehaviour
     {
         //Debug.Log("Menu: SwitchPanel!");
 
-        if(_currentPanel != null)
+        if (_currentPanel != null)
         {
             _currentPanel.OnExit();
         }
