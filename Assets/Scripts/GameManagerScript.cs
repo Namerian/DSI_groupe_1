@@ -34,6 +34,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<MaterialListElement> _backgroundMaterials;
 
+    [SerializeField]
+    private List<AmbianceBgListElement> _ambiancePrefabs;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -75,6 +78,23 @@ public class GameManagerScript : MonoBehaviour
             }
 
             Debug.LogError("Could not find material for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public GameObject AmbianceBackground
+    {
+        get
+        {
+            foreach(AmbianceBgListElement element in _ambiancePrefabs)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.ambiancePrefab;
+                }
+            }
+
+            Debug.LogError("Could not find ambiance prefab for environment " + EnvironmentName + "!");
             return null;
         }
     }
@@ -182,4 +202,11 @@ public class MaterialListElement
 {
     public string environmentName;
     public Material material;
+}
+
+[System.Serializable]
+public class AmbianceBgListElement
+{
+    public string environmentName;
+    public GameObject ambiancePrefab;
 }
