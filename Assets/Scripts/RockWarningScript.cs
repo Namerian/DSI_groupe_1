@@ -22,7 +22,7 @@ public class RockWarningScript : MonoBehaviour
 
         float xPos = Mathf.Clamp(_rock.transform.position.x, leftLimit, rightLimit);
 
-        this.transform.position = new Vector3(_rock.transform.position.x, yPos, -1);
+        this.transform.position = new Vector3(_rock.transform.position.x, yPos, 0);
     }
 
     // Update is called once per frame

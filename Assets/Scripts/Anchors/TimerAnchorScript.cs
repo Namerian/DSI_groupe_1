@@ -33,7 +33,7 @@ public class TimerAnchorScript : AbstractAnchorScript
                 GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_priseBreak"));
 
                 Vector3 pos = this.transform.position;
-                pos.z = -1;
+                //pos.z = -1;
                 fx.transform.position = pos;
 
                 Destroy(this.gameObject);
