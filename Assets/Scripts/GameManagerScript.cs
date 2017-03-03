@@ -44,6 +44,9 @@ public class GameManagerScript : MonoBehaviour
     private List<MaterialListElement> _anchorMaterials;
 
     [SerializeField]
+    private List<SpriteListElement> _plantSprites;
+
+    [SerializeField]
     private List<int> _levelExperience;
 
     //==========================================================================================
@@ -138,6 +141,23 @@ public class GameManagerScript : MonoBehaviour
             }
 
             Debug.LogError("Could not find anchor material for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Sprite PlantSprite
+    {
+        get
+        {
+            foreach(SpriteListElement element in _plantSprites)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.sprite;
+                }
+            }
+
+            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
             return null;
         }
     }
@@ -270,4 +290,11 @@ public class AmbianceBgListElement
 {
     public string environmentName;
     public GameObject ambiancePrefab;
+}
+
+[System.Serializable]
+public class SpriteListElement
+{
+    public string environmentName;
+    public Sprite sprite;
 }
