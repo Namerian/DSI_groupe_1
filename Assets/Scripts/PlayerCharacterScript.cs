@@ -18,6 +18,9 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
     [SerializeField]
     private int _grabScoreBonus = 1000;
 
+    [SerializeField]
+    private GameObject _grabFxPrefab;
+
     //========================================================
     //
     //========================================================
@@ -53,7 +56,7 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
 
-        foreach(ExtremityScript extremity in _extremitiesList)
+        foreach (ExtremityScript extremity in _extremitiesList)
         {
             extremity.RockCollisionListener = this;
         }
@@ -143,7 +146,7 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
 
                 Vector3 force = mousePos - _draggedExtremity.transform.position;
 
-                if(force.magnitude > 1)
+                if (force.magnitude > 1)
                 {
                     force.Normalize();
                 }
@@ -208,6 +211,9 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
                             //Debug.Log("end of drag, anchored extremity");
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
+                            GameObject fx = Instantiate(_grabFxPrefab);
+                            fx.transform.position = anchorScript.transform.position;
+
                             if (!anchorScript.usedOnce)
                             {
                                 anchorScript.usedOnce = true;
@@ -218,13 +224,9 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
                         }
                     }
                 }
-
-                _draggedExtremity.IsMoving = false;
-                _draggedExtremity = null;
-
-                _isDragging = false;
             }
-            else if (_isDragging)
+
+            if (_isDragging)
             {
                 _draggedExtremity.IsMoving = false;
                 _draggedExtremity = null;
@@ -248,7 +250,7 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
             _isDragging = false;
         }
 
-        foreach(ExtremityScript extremity in _extremitiesList)
+        foreach (ExtremityScript extremity in _extremitiesList)
         {
             extremity.UnanchorExtremity();
         }

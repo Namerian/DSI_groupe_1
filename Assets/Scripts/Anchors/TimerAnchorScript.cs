@@ -30,6 +30,12 @@ public class TimerAnchorScript : AbstractAnchorScript
         {
             if (_useTimer > _maxUseTime)
             {
+                GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_priseBreak"));
+
+                Vector3 pos = this.transform.position;
+                pos.z = -1;
+                fx.transform.position = pos;
+
                 Destroy(this.gameObject);
             }
             _useTimer += Time.deltaTime;

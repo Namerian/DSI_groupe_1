@@ -114,13 +114,13 @@ public class GameManagerScript : MonoBehaviour
     {
         if(this != _instance)
         {
-            Debug.Log("OnSceneLoaded called in wrong GameManager instance!");
+            Debug.LogError("OnSceneLoaded called in wrong GameManager instance!");
             return;
         }
 
         if (scene.name == "TestLevel")
         {
-            Debug.Log("OnSceneLoaded: TestLevel called!");
+            //Debug.Log("OnSceneLoaded: TestLevel called!");
 
             int charIndex = 0;
 
@@ -152,11 +152,11 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-        else if (scene.name == "Menu")
+        /*else if (scene.name == "Menu")
         {
             //MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
             //menu.SwitchPanel(menu.ProgressionPanel);
-        }
+        }*/
 
         SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }
