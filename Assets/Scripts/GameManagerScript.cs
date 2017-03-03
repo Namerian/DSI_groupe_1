@@ -34,6 +34,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<MaterialListElement> _backgroundMaterials;
 
+    [SerializeField]
+    private List<AmbianceBgListElement> _ambiancePrefabs;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -79,7 +82,26 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public GameObject AmbianceBackground
+    {
+        get
+        {
+            foreach(AmbianceBgListElement element in _ambiancePrefabs)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.ambiancePrefab;
+                }
+            }
+
+            Debug.LogError("Could not find ambiance prefab for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
     public int SessionScore { get; private set; }
+
+    public int BestSessionScore { get; private set; }
 
     public int TotalScore { get; private set; }
 
@@ -99,6 +121,12 @@ public class GameManagerScript : MonoBehaviour
     public void LoadMenu(int levelScore)
     {
         SessionScore = levelScore;
+
+        if(levelScore > BestSessionScore)
+        {
+            BestSessionScore = levelScore;
+        }
+
         TotalScore += levelScore;
 
         SceneManager.sceneLoaded += this.OnSceneLoaded;
@@ -174,4 +202,11 @@ public class MaterialListElement
 {
     public string environmentName;
     public Material material;
+}
+
+[System.Serializable]
+public class AmbianceBgListElement
+{
+    public string environmentName;
+    public GameObject ambiancePrefab;
 }

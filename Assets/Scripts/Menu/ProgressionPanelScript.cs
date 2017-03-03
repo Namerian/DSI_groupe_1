@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
 {
     private MenuScript _menu;
 
     private CanvasGroup _canvasGroup;
+    private Text _lastSessionScoreText;
+    private Text _bestSessionScoreText;
+    private Text _totalScoreText;
 
     private bool _active;
 
@@ -14,6 +18,10 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     {
         _menu = this.transform.parent.GetComponent<MenuScript>();
         _canvasGroup = GetComponent<CanvasGroup>();
+        _lastSessionScoreText = this.transform.Find("LevelPanel/LastSessionScoreText").GetComponent<Text>();
+        _bestSessionScoreText = this.transform.Find("LevelPanel/BestSessionScoreText").GetComponent<Text>();
+        _totalScoreText = this.transform.Find("LevelPanel/TotalScoreText").GetComponent<Text>();
+
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
@@ -33,6 +41,10 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _canvasGroup.alpha = 1;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
+
+            _lastSessionScoreText.text = "Last Session Score: " + GameManagerScript.Instance.SessionScore;
+            _bestSessionScoreText.text = "Best Session Score: " + GameManagerScript.Instance.BestSessionScore;
+            _totalScoreText.text = "Total Score: " + GameManagerScript.Instance.TotalScore;
         }
     }
 
