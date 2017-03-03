@@ -44,7 +44,6 @@ public class GameManagerScript : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -80,9 +79,11 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    public int LevelScore { get; private set; }
-
     public int SessionScore { get; private set; }
+
+    public int TotalScore { get; private set; }
+
+    public int OldTotalScore { get { return TotalScore - SessionScore; } }
 
     //==========================================================================================
     //
@@ -90,13 +91,15 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         SceneManager.LoadScene("Scenes/TestLevel");
     }
 
     public void LoadMenu(int levelScore)
     {
-        LevelScore = levelScore;
-        SessionScore += levelScore;
+        SessionScore = levelScore;
+        TotalScore += levelScore;
 
         SceneManager.LoadScene("Scenes/Menu");
     } 
@@ -141,7 +144,8 @@ public class GameManagerScript : MonoBehaviour
         }
         else if(scene.name == "Menu")
         {
-
+            MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
+            menu.SwitchPanel(menu.ProgressionPanel);
         }
         
     }
