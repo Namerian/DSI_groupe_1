@@ -153,8 +153,10 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
+        SessionScore = 0;
 
+        //***************************
+        SceneManager.sceneLoaded += this.OnSceneLoaded;
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
@@ -169,8 +171,7 @@ public class GameManagerScript : MonoBehaviour
 
         TotalScore += levelScore;
 
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
-
+        //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
     }
 
@@ -220,11 +221,6 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-        /*else if (scene.name == "Menu")
-        {
-            //MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
-            //menu.SwitchPanel(menu.ProgressionPanel);
-        }*/
 
         SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }

@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class MenuScript : MonoBehaviour
 {
 
-    public float bestScore, totalScore, scoreToAdd;
-    public Text currentLevelText, nextLevelText;
-    public Slider progressionJauge;
-    public float[] levelsXP;
-    public int currentLevel;
-    [SerializeField]
-    private GameObject activePanel, progressPanel;
+    //public float bestScore, totalScore, scoreToAdd;
+    //public Text currentLevelText, nextLevelText;
+    //public Slider progressionJauge;
+    //public float[] levelsXP;
+    //public int currentLevel;
+    //[SerializeField]
+    //private GameObject activePanel, progressPanel;
 
     //=====================================================================================
     //
@@ -51,16 +51,6 @@ public class MenuScript : MonoBehaviour
         {
             SwitchPanel(TitlePanel);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        /*if(_currentPanel == null)
-        {
-            //Debug.Log("Menu: currentPanel is null!");
-            SwitchPanel(TitlePanel);
-        }*/
     }
 
     //=====================================================================================

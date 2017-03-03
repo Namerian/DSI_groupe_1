@@ -11,6 +11,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     private Text _lastSessionScoreText;
     private Text _bestSessionScoreText;
     private Text _totalScoreText;
+    private Text _currentLevelText;
+    private Text _nextLevelText;
+    private Slider _levelSlider;
 
     private bool _active;
 
@@ -21,6 +24,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
         _lastSessionScoreText = this.transform.Find("LevelPanel/LastSessionScoreText").GetComponent<Text>();
         _bestSessionScoreText = this.transform.Find("LevelPanel/BestSessionScoreText").GetComponent<Text>();
         _totalScoreText = this.transform.Find("LevelPanel/TotalScoreText").GetComponent<Text>();
+        _currentLevelText = this.transform.Find("LevelPanel/CurrentLevelText").GetComponent<Text>();
+        _nextLevelText = this.transform.Find("LevelPanel/NextLevelText").GetComponent<Text>();
+        _levelSlider = this.transform.Find("LevelPanel/Slider").GetComponent<Slider>();
 
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
@@ -28,10 +34,10 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
 
-    }
+    }*/
 
     public void OnEnter()
     {
