@@ -4,35 +4,47 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    //========================================================
-    //
-    //========================================================
+    //==========================================================================================
+    // editable variables
+    //==========================================================================================
 
+    [Header("index=difficulty, y=baseSpeed")]
     [SerializeField]
-    private float _scrollSpeed = 1f;
+    private List<float> _baseSpeeds;
 
-    [SerializeField]
-    private float _maxHorizontalOffset = 2f;
-
+    [Space(10)]
+    [Header("x=altitude, y=speedMultiplier")]
     [SerializeField]
     private List<Vector2> _accelerationSteps;
 
-    //========================================================
-    //
-    //========================================================
+    [Space(10)]
+    [SerializeField]
+    private float _maxHorizontalOffset = 2f;
+
+    //==========================================================================================
+    // other variable
+    //==========================================================================================
 
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
-    //========================================================
-    //
-    //========================================================
+    private float _scrollSpeed = 0.3f;
+    private int _stepIndex = -1;
+
+    //==========================================================================================
+    // monobehaviour methods
+    //==========================================================================================
 
     // Use this for initialization
     void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
+
+        if(GameManagerScript.Instance != null)
+        {
+            _scrollSpeed = _baseSpeeds[GameManagerScript.Instance.DifficultyLevel];
+        }
     }
 
     // Update is called once per frame
@@ -49,6 +61,11 @@ public class CameraScript : MonoBehaviour
         {
             if (_playerScript.Altitude >= _accelerationSteps[i].x)
             {
+                if(_stepIndex < i)
+                {
+                    _stepIndex = i;
+                    UIManager.Instance.Faster();
+                }
                 baseSpeed *= _accelerationSteps[i].y;
                 break;
             }

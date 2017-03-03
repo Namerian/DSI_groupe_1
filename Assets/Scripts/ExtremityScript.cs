@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class ExtremityScript : MonoBehaviour
 {
-    private HingeJoint2D _hingeJoint;
+    //==========================================================================================
+    // variables
+    //==========================================================================================
 
-    private bool _isMoving;
-    private GameObject _helpCircle;
-    private AbstractAnchorScript _anchor;
+    private HingeJoint2D _hingeJoint; //the hingejoint component of the extremity
+
+    private bool _isMoving; //wether the extremity is being dragged, used to show the ui circle
+    private GameObject _helpCircle; //the ui circle that is shown when the extremity is being dragged
+
+    private AbstractAnchorScript _anchor; //the anchor this extremity is anchored to
+
+    //==========================================================================================
+    // public properties
+    //==========================================================================================
 
     public bool IsMoving
     {
@@ -33,6 +42,12 @@ public class ExtremityScript : MonoBehaviour
 
     public bool IsAnchored { get; private set; }
 
+    public IRockCollisionListener RockCollisionListener { get; set; }
+
+    //==========================================================================================
+    // monobehaviour methods
+    //==========================================================================================
+
     // Use this for initialization
     void Start()
     {
@@ -55,28 +70,41 @@ public class ExtremityScript : MonoBehaviour
     {
         if(IsAnchored && this.transform.position.y < Camera.main.transform.position.y - Camera.main.orthographicSize)
         {
-            Debug.Log("extremity unanchored because out of screen");
+            //Debug.Log("extremity unanchored because out of screen");
             UnanchorExtremity();
         }
 
 
-        // I do not know what this code is good for...
-        /*if (_hingeJoint != null)
+        if(_hingeJoint != null && IsAnchored && _hingeJoint.connectedBody == null)
         {
-            if (_hingeJoint.connectedBody != null && IsAnchored == false)
-            {
-                Debug.Log("case A");
-                _hingeJoint.enabled = true;
-                IsAnchored = true;
-            }
-            else if (_hingeJoint.connectedBody == null && IsAnchored == true)
-            {
-                Debug.Log("case B");
-                _hingeJoint.enabled = false;
-                IsAnchored = false;
-            }
-        }*/
+            _hingeJoint.enabled = false;
+            IsAnchored = false;
+        }
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("BonusObject"))
+        {
+            Debug.Log("Collision with Bonus Object!");
+            UIManager.Instance.AddScore((int)other.GetComponent<BonusObjectScript>().BonusScore);
+            Destroy(other.gameObject);
+        } 
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Rock"))
+        {
+            Debug.Log("Collision with Rock!");
+            UnanchorExtremity();
+            RockCollisionListener.OnRockCollision();
+        }
+    }
+
+    //==========================================================================================
+    // public methods
+    //==========================================================================================
 
     public void AnchorExtremity(AbstractAnchorScript anchor, float breakForce)
     {

@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class AbstractAnchorScript : MonoBehaviour
 {
     public bool IsInUse { get; set; }
+    public bool usedOnce { get; set; }
 
     public abstract void Respawn();
 }

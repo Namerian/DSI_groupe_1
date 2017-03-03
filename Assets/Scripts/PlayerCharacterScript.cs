@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerCharacterScript : MonoBehaviour
+public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
 {
     //========================================================
     //
@@ -14,6 +14,9 @@ public class PlayerCharacterScript : MonoBehaviour
 
     [SerializeField]
     private float _anchorBreakForce = 100f;
+
+    [SerializeField]
+    private int _grabScoreBonus = 1000;
 
     //========================================================
     //
@@ -47,6 +50,11 @@ public class PlayerCharacterScript : MonoBehaviour
         _uiManager = FindObjectOfType<UIManager>();
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
+
+        foreach(ExtremityScript extremity in _extremitiesList)
+        {
+            extremity.RockCollisionListener = this;
+        }
     }
 
     //========================================================
@@ -125,7 +133,14 @@ public class PlayerCharacterScript : MonoBehaviour
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
-                _draggedExtremity.GetComponent<Rigidbody2D>().AddForce((mousePos - _draggedExtremity.transform.position) * _draggingMultiplyer);
+                Vector3 force = mousePos - _draggedExtremity.transform.position;
+
+                if(force.magnitude > 1)
+                {
+                    force.Normalize();
+                }
+
+                _draggedExtremity.GetComponent<Rigidbody2D>().AddForce(force * _draggingMultiplyer);
 
                 if (_levitationTimer > 1f)
                 {
@@ -185,7 +200,11 @@ public class PlayerCharacterScript : MonoBehaviour
                             //Debug.Log("end of drag, anchored extremity");
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
-                            _uiManager.AddScore(1000);
+                            if (!anchorScript.usedOnce)
+                            {
+                                anchorScript.usedOnce = true;
+                                _uiManager.AddScore(_grabScoreBonus);
+                            }
 
                             break;
                         }
@@ -211,9 +230,31 @@ public class PlayerCharacterScript : MonoBehaviour
     //
     //========================================================
 
+    public void OnRockCollision()
+    {
+        if (_isDragging)
+        {
+            _draggedExtremity.IsMoving = false;
+            _draggedExtremity = null;
+
+            _isDragging = false;
+        }
+
+        foreach(ExtremityScript extremity in _extremitiesList)
+        {
+            extremity.UnanchorExtremity();
+        }
+    }
+
+    //========================================================
+    //
+    //========================================================
+
     private void ReloadScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        GameManagerScript.Instance.LoadMenu((int)UIManager.Instance.score);
     }
 
     private void AllowAnchoring()
