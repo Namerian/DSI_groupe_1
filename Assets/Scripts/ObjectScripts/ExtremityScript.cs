@@ -30,7 +30,7 @@ public class ExtremityScript : MonoBehaviour
                 _helpCircle.transform.parent = this.transform;
 
                 Vector3 pos = this.transform.position;
-                pos.z = -1;
+                //pos.z = -1;
                 _helpCircle.transform.position = pos;
             }
             else if (_isMoving && !value)

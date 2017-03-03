@@ -37,6 +37,12 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<AmbianceBgListElement> _ambiancePrefabs;
 
+    [SerializeField]
+    private List<MaterialListElement> _crevasseMaterials;
+
+    [SerializeField]
+    private List<MaterialListElement> _anchorMaterials;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -77,7 +83,7 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
 
-            Debug.LogError("Could not find material for environment " + EnvironmentName + "!");
+            Debug.LogError("Could not find background material for environment " + EnvironmentName + "!");
             return null;
         }
     }
@@ -95,6 +101,40 @@ public class GameManagerScript : MonoBehaviour
             }
 
             Debug.LogError("Could not find ambiance prefab for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Material CrevasseMaterial
+    {
+        get
+        {
+            foreach (MaterialListElement element in _crevasseMaterials)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.material;
+                }
+            }
+
+            Debug.LogError("Could not find crevasse material for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Material AnchorMaterial
+    {
+        get
+        {
+            foreach (MaterialListElement element in _anchorMaterials)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.material;
+                }
+            }
+
+            Debug.LogError("Could not find anchor material for environment " + EnvironmentName + "!");
             return null;
         }
     }
