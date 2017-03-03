@@ -17,6 +17,7 @@ public class SettingsPanelScript : MonoBehaviour, IMenuPanel
         _canvasGroup = GetComponent<CanvasGroup>();
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
     }
 
     // Update is called once per frame
@@ -32,6 +33,7 @@ public class SettingsPanelScript : MonoBehaviour, IMenuPanel
             _active = true;
             _canvasGroup.alpha = 1;
             _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
         }
     }
 
@@ -42,6 +44,7 @@ public class SettingsPanelScript : MonoBehaviour, IMenuPanel
             _active = false;
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
     }
 
