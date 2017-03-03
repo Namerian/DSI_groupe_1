@@ -47,7 +47,7 @@ public class GameManagerScript : MonoBehaviour
         }
         else
         {
-            Debug.LogError("GameManager has already been instantiated!");
+            //Debug.LogError("GameManager has already been instantiated!");
             Destroy(this.gameObject);
         }
     }
@@ -93,7 +93,7 @@ public class GameManagerScript : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        SceneManager.LoadScene("Scenes/TestLevel");
+        SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
     public void LoadMenu(int levelScore)
@@ -101,7 +101,7 @@ public class GameManagerScript : MonoBehaviour
         SessionScore = levelScore;
         TotalScore += levelScore;
 
-        SceneManager.LoadScene("Scenes/Menu");
+        SceneManager.LoadSceneAsync("Scenes/Menu");
     } 
 
     //==========================================================================================
