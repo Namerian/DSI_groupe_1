@@ -43,6 +43,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<MaterialListElement> _anchorMaterials;
 
+    [SerializeField]
+    private List<int> _levelExperience;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -147,6 +150,8 @@ public class GameManagerScript : MonoBehaviour
 
     public int OldTotalScore { get { return TotalScore - SessionScore; } }
 
+    public int MaxLevel { get { return _levelExperience.Count - 1; } }
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -173,6 +178,26 @@ public class GameManagerScript : MonoBehaviour
 
         //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
+    }
+
+    public int ComputeLevel(int experience)
+    {
+        int level = 0;
+
+        for(int i = 0;i < _levelExperience.Count; i++)
+        {
+            if(experience > _levelExperience[i])
+            {
+                level++;
+                experience -= _levelExperience[i];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return level;
     }
 
     //==========================================================================================
