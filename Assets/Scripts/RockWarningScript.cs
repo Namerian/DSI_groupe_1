@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class RockWarningScript : MonoBehaviour
 {
-    private Transform _arrowTransform;
+    //private Transform _arrowTransform;
     private Transform _rock;
 
     // Use this for initialization
     void Start()
     {
-        _arrowTransform = this.transform.Find("Arrow");
+        //_arrowTransform = this.transform.Find("Arrow");
 
-        _arrowTransform.up = (_rock.position - this.transform.position).normalized;
+        //_arrowTransform.up = (_rock.position - this.transform.position).normalized;
 
         float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize - 0.5f;
 
@@ -22,7 +22,7 @@ public class RockWarningScript : MonoBehaviour
 
         float xPos = Mathf.Clamp(_rock.transform.position.x, leftLimit, rightLimit);
 
-        this.transform.position = new Vector3(xPos, yPos, 0);
+        this.transform.position = new Vector3(_rock.transform.position.x, yPos, -1);
     }
 
     // Update is called once per frame
@@ -40,7 +40,7 @@ public class RockWarningScript : MonoBehaviour
             return;
         }
 
-        _arrowTransform.up = (_rock.position - this.transform.position).normalized;
+        //_arrowTransform.up = (_rock.position - this.transform.position).normalized;
 
         float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize - 0.5f;
 
@@ -50,7 +50,7 @@ public class RockWarningScript : MonoBehaviour
 
         float xPos = Mathf.Clamp(_rock.transform.position.x, leftLimit, rightLimit);
 
-        this.transform.position = new Vector3(xPos, yPos, 0);
+        this.transform.position = new Vector3(_rock.transform.position.x, yPos, -1);
     }
 
     public void Initialize(Transform rock)

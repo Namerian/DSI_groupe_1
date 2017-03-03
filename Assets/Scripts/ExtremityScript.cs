@@ -26,9 +26,12 @@ public class ExtremityScript : MonoBehaviour
         {
             if (!_isMoving && value)
             {
-                _helpCircle = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/EmptyCircle"));
+                _helpCircle = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_GrabHelper"));
                 _helpCircle.transform.parent = this.transform;
-                _helpCircle.transform.position = this.transform.position;
+
+                Vector3 pos = this.transform.position;
+                pos.z = -1;
+                _helpCircle.transform.position = pos;
             }
             else if (_isMoving && !value)
             {
@@ -87,7 +90,12 @@ public class ExtremityScript : MonoBehaviour
         if (other.CompareTag("BonusObject"))
         {
             Debug.Log("Collision with Bonus Object!");
+
             UIManager.Instance.AddScore((int)other.GetComponent<BonusObjectScript>().BonusScore);
+
+            GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_TakeItem"));
+            fx.transform.position = other.transform.position;
+
             Destroy(other.gameObject);
         } 
     }

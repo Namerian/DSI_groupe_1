@@ -12,8 +12,7 @@ public class TitlePanelScript : MonoBehaviour, IMenuPanel
 
     private bool _active;
 
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
         _menu = this.transform.parent.GetComponent<MenuScript>();
         _canvasGroup = GetComponent<CanvasGroup>();
@@ -52,7 +51,7 @@ public class TitlePanelScript : MonoBehaviour, IMenuPanel
 
     public void OnPlayButton()
     {
-        Debug.Log("TitlePanel: OnPlayButton!");
+        //Debug.Log("TitlePanel: OnPlayButton!");
         _menu.SwitchPanel(_menu.LevelSelectionPanel);
     }
 

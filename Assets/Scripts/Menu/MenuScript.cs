@@ -33,23 +33,35 @@ public class MenuScript : MonoBehaviour
     //
     //=====================================================================================
 
-    // Use this for initialization
-    void Start ()
+    void Awake()
     {
         TitlePanel = this.transform.Find("Titre").GetComponent<IMenuPanel>();
         LevelSelectionPanel = this.transform.Find("SelectionNiveau").GetComponent<IMenuPanel>();
         ProgressionPanel = this.transform.Find("Progression").GetComponent<IMenuPanel>();
         SettingsPanel = this.transform.Find("Credits&Settings").GetComponent<IMenuPanel>();
-	}
+    }
 
-    // Update is called once per frame
-    void Update () {
-		if(_currentPanel == null)
+    void Start()
+    {
+        if (GameManagerScript.Instance.SessionScore != 0)
         {
-            Debug.Log("Menu: currentPanel is null!");
+            SwitchPanel(ProgressionPanel);
+        }
+        else
+        {
             SwitchPanel(TitlePanel);
         }
-	}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        /*if(_currentPanel == null)
+        {
+            //Debug.Log("Menu: currentPanel is null!");
+            SwitchPanel(TitlePanel);
+        }*/
+    }
 
     //=====================================================================================
     //
@@ -57,9 +69,9 @@ public class MenuScript : MonoBehaviour
 
     public void SwitchPanel(IMenuPanel newPanel)
     {
-        Debug.Log("Menu: SwitchPanel!");
+        //Debug.Log("Menu: SwitchPanel!");
 
-        if(_currentPanel != null)
+        if (_currentPanel != null)
         {
             _currentPanel.OnExit();
         }
@@ -68,12 +80,16 @@ public class MenuScript : MonoBehaviour
         _currentPanel.OnEnter();
     }
 
-    public void ShowGameResultPanel() //à appeler quand on retourne à la scène menu après une partie : affiche directement l'écran de progression
+    //=====================================================================================
+    //
+    //=====================================================================================
+
+    /*public void ShowGameResultPanel() //à appeler quand on retourne à la scène menu après une partie : affiche directement l'écran de progression
     {
         activePanel.SetActive(false);
         progressPanel.SetActive(true);
         activePanel = progressPanel;
-    }
+    }*/
 
     /*public void ChangePanel(GameObject panel) //permet de changer d'écran pour naviguer entre les menus (appel via boutons)
     {

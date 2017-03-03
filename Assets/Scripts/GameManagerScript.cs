@@ -47,7 +47,7 @@ public class GameManagerScript : MonoBehaviour
         }
         else
         {
-            Debug.LogError("GameManager has already been instantiated!");
+            //Debug.LogError("GameManager has already been instantiated!");
             Destroy(this.gameObject);
         }
     }
@@ -66,9 +66,9 @@ public class GameManagerScript : MonoBehaviour
     {
         get
         {
-            foreach(MaterialListElement element in _backgroundMaterials)
+            foreach (MaterialListElement element in _backgroundMaterials)
             {
-                if(element.environmentName == EnvironmentName)
+                if (element.environmentName == EnvironmentName)
                 {
                     return element.material;
                 }
@@ -91,9 +91,9 @@ public class GameManagerScript : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += this.OnSceneLoaded;
 
-        SceneManager.LoadScene("Scenes/TestLevel");
+        SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
     public void LoadMenu(int levelScore)
@@ -101,8 +101,10 @@ public class GameManagerScript : MonoBehaviour
         SessionScore = levelScore;
         TotalScore += levelScore;
 
-        SceneManager.LoadScene("Scenes/Menu");
-    } 
+        SceneManager.sceneLoaded += this.OnSceneLoaded;
+
+        SceneManager.LoadSceneAsync("Scenes/Menu");
+    }
 
     //==========================================================================================
     //
@@ -110,8 +112,16 @@ public class GameManagerScript : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if(scene.name == "TestLevel")
+        if(this != _instance)
         {
+            Debug.LogError("OnSceneLoaded called in wrong GameManager instance!");
+            return;
+        }
+
+        if (scene.name == "TestLevel")
+        {
+            //Debug.Log("OnSceneLoaded: TestLevel called!");
+
             int charIndex = 0;
 
             for (int i = 0; i < _characterPrefabs.Count; i++)
@@ -142,12 +152,13 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-        else if(scene.name == "Menu")
+        /*else if (scene.name == "Menu")
         {
-            MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
-            menu.SwitchPanel(menu.ProgressionPanel);
-        }
-        
+            //MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
+            //menu.SwitchPanel(menu.ProgressionPanel);
+        }*/
+
+        SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }
 }
 
