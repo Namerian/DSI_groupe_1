@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackgroundMaterialScript : MonoBehaviour
+public class PlantSpriteScript : MonoBehaviour
 {
 
     // Use this for initialization
     void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        Material material = GameManagerScript.Instance.BackgroundMaterial;
+        Sprite sprite = GameManagerScript.Instance.PlantSprite;
 
-        if (material != null)
+        if (sprite != null)
         {
-            renderer.material = material;
+            renderer.sprite = sprite;
         }
     }
 }

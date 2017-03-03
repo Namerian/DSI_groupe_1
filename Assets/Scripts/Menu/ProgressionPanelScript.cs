@@ -15,7 +15,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     private Text _nextLevelText;
     private Slider _levelSlider;
 
-    private bool _active;
+    private bool _active = false;
+    private bool _updated = false;
+    private bool _updating = false;
 
     void Awake()
     {
@@ -51,6 +53,23 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _lastSessionScoreText.text = "Last Session Score: " + GameManagerScript.Instance.SessionScore;
             _bestSessionScoreText.text = "Best Session Score: " + GameManagerScript.Instance.BestSessionScore;
             _totalScoreText.text = "Total Score: " + GameManagerScript.Instance.TotalScore;
+
+            int currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
+            _currentLevelText.text = "Level " + currentLevel;
+
+            if(currentLevel < GameManagerScript.Instance.MaxLevel)
+            {
+                _nextLevelText.text = "Level " + (currentLevel + 1);
+            }
+            else
+            {
+                _nextLevelText.text = "Max Level";
+            }
+
+            if (!_updated && GameManagerScript.Instance.SessionScore > 0)
+            {
+                _updating = true;
+            }
         }
     }
 

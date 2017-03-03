@@ -32,7 +32,7 @@ public class GameManagerScript : MonoBehaviour
     private List<CharacterListElement> _characterPrefabs;
 
     [SerializeField]
-    private List<MaterialListElement> _backgroundMaterials;
+    private List<ColourListElement> _backgroundColours;
 
     [SerializeField]
     private List<AmbianceBgListElement> _ambiancePrefabs;
@@ -42,6 +42,12 @@ public class GameManagerScript : MonoBehaviour
 
     [SerializeField]
     private List<MaterialListElement> _anchorMaterials;
+
+    [SerializeField]
+    private List<SpriteListElement> _plantSprites;
+
+    [SerializeField]
+    private List<int> _levelExperience;
 
     //==========================================================================================
     //
@@ -71,20 +77,20 @@ public class GameManagerScript : MonoBehaviour
 
     public string EnvironmentName { get; set; }
 
-    public Material BackgroundMaterial
+    public Color BackgroundColour
     {
         get
         {
-            foreach (MaterialListElement element in _backgroundMaterials)
+            foreach (ColourListElement element in _backgroundColours)
             {
                 if (element.environmentName == EnvironmentName)
                 {
-                    return element.material;
+                    return element.colour;
                 }
             }
 
-            Debug.LogError("Could not find background material for environment " + EnvironmentName + "!");
-            return null;
+            Debug.LogError("Could not find background colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
         }
     }
 
@@ -139,6 +145,23 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public Sprite PlantSprite
+    {
+        get
+        {
+            foreach(SpriteListElement element in _plantSprites)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.sprite;
+                }
+            }
+
+            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
     public int SessionScore { get; private set; }
 
     public int BestSessionScore { get; private set; }
@@ -146,6 +169,8 @@ public class GameManagerScript : MonoBehaviour
     public int TotalScore { get; private set; }
 
     public int OldTotalScore { get { return TotalScore - SessionScore; } }
+
+    public int MaxLevel { get { return _levelExperience.Count - 1; } }
 
     //==========================================================================================
     //
@@ -173,6 +198,26 @@ public class GameManagerScript : MonoBehaviour
 
         //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
+    }
+
+    public int ComputeLevel(int experience)
+    {
+        int level = 0;
+
+        for(int i = 0;i < _levelExperience.Count; i++)
+        {
+            if(experience > _levelExperience[i])
+            {
+                level++;
+                experience -= _levelExperience[i];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return level;
     }
 
     //==========================================================================================
@@ -245,4 +290,18 @@ public class AmbianceBgListElement
 {
     public string environmentName;
     public GameObject ambiancePrefab;
+}
+
+[System.Serializable]
+public class SpriteListElement
+{
+    public string environmentName;
+    public Sprite sprite;
+}
+
+[System.Serializable]
+public class ColourListElement
+{
+    public string environmentName;
+    public Color colour;
 }
