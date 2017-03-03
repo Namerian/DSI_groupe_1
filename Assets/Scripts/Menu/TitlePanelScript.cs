@@ -59,4 +59,13 @@ public class TitlePanelScript : MonoBehaviour, IMenuPanel
     {
         _menu.SwitchPanel(_menu.SettingsPanel);
     }
+
+    public void OnExitButton()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+		Application.Quit ();
+        #endif
+    }
 }

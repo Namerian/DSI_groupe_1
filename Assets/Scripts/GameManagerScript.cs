@@ -81,6 +81,8 @@ public class GameManagerScript : MonoBehaviour
 
     public int SessionScore { get; private set; }
 
+    public int BestSessionScore { get; private set; }
+
     public int TotalScore { get; private set; }
 
     public int OldTotalScore { get { return TotalScore - SessionScore; } }
@@ -99,6 +101,12 @@ public class GameManagerScript : MonoBehaviour
     public void LoadMenu(int levelScore)
     {
         SessionScore = levelScore;
+
+        if(levelScore > BestSessionScore)
+        {
+            BestSessionScore = levelScore;
+        }
+
         TotalScore += levelScore;
 
         SceneManager.sceneLoaded += this.OnSceneLoaded;
