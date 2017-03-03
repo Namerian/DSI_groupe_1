@@ -89,7 +89,7 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
 
-            Debug.LogError("Could not find background material for environment " + EnvironmentName + "!");
+            Debug.LogError("Could not find background colour for environment " + EnvironmentName + "!");
             return Color.magenta;
         }
     }

@@ -11,9 +11,6 @@ public class BackgroundColourScript : MonoBehaviour
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         Color colour = GameManagerScript.Instance.BackgroundColour;
 
-        if (colour != null)
-        {
-            renderer.color = colour;
-        }
+        renderer.color = colour;
     }
 }

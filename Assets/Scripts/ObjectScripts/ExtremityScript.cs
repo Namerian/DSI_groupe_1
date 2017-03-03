@@ -45,8 +45,6 @@ public class ExtremityScript : MonoBehaviour
 
     public bool IsAnchored { get; private set; }
 
-    public IRockCollisionListener RockCollisionListener { get; set; }
-
     //==========================================================================================
     // monobehaviour methods
     //==========================================================================================
@@ -98,16 +96,6 @@ public class ExtremityScript : MonoBehaviour
 
             Destroy(other.gameObject);
         } 
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Rock"))
-        {
-            Debug.Log("Collision with Rock!");
-            UnanchorExtremity();
-            RockCollisionListener.OnRockCollision();
-        }
     }
 
     //==========================================================================================
