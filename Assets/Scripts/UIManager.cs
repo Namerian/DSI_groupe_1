@@ -35,6 +35,9 @@ public class UIManager : MonoBehaviour
     public int combo;
     public Color[] comboColors;
 
+    [SerializeField]
+    private float _scoreInterval = 0.1f;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -55,13 +58,12 @@ public class UIManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        Invoke("UpdateScore", _scoreInterval);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        score += combo;
         UpdateScoreText();
     }
 
@@ -122,5 +124,12 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         addScoreText.transform.DOScaleY(0, 0.5f);
         yield return new WaitForSeconds(0.5f);
+    }
+
+    private void UpdateScore()
+    {
+        score += combo;
+
+        Invoke("UpdateScore", _scoreInterval);
     }
 }
