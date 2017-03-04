@@ -79,9 +79,15 @@ public class GameManagerScript : MonoBehaviour
             TotalScore = PlayerPrefs.GetInt("TotalScore");
             BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
 
+            //Amplitude amplitude = Amplitude.Instance;
+            //amplitude.logging = true;
+            //amplitude.init("e42975312282ef47be31ec6af5cb48fc");
+            //amplitude.startSession();
+
             AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
             AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
             AmplitudeHelper.Instance.StartSession();
+            AmplitudeHelper.Instance.LogEvent("Start Game");
         }
         else
         {
@@ -105,8 +111,10 @@ public class GameManagerScript : MonoBehaviour
             Debug.Log("timeInSeconds: " + Time.realtimeSinceStartup);
             Debug.Log("time: " + string.Format("{0:00}:{1:00}", minutes, seconds));*/
 
-            AmplitudeHelper.Instance.LogEvent("Exit Game");
+            //Amplitude.Instance.logEvent("Exit Game");
+            //Amplitude.Instance.endSession();
 
+            AmplitudeHelper.Instance.LogEvent("Exit Game");
             AmplitudeHelper.Instance.EndSession();
         }
     }

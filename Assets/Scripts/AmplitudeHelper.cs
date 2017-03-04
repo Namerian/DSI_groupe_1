@@ -49,6 +49,7 @@ public class AmplitudeHelper
 		}
 
 		amplitude.trackSessionEvents(true);
+        amplitude.logging = true;
 		amplitude.init(AppId);
 
 		// We chose to use the deviceId as unique userId
