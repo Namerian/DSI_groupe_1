@@ -32,10 +32,25 @@ public class GameManagerScript : MonoBehaviour
     private List<CharacterListElement> _characterPrefabs;
 
     [SerializeField]
-    private List<MaterialListElement> _backgroundMaterials;
+    private List<ColourListElement> _backgroundColours;
 
     [SerializeField]
     private List<AmbianceBgListElement> _ambiancePrefabs;
+
+    [SerializeField]
+    private List<ColourListElement> _crevasseColours;
+
+    [SerializeField]
+    private List<MaterialListElement> _anchorMaterials;
+
+    [SerializeField]
+    private List<SpriteListElement> _plantSprites;
+
+    [SerializeField]
+    private List<SpriteListElement> _UIImages;
+
+    [SerializeField]
+    private List<int> _levelExperience;
 
     //==========================================================================================
     //
@@ -65,20 +80,20 @@ public class GameManagerScript : MonoBehaviour
 
     public string EnvironmentName { get; set; }
 
-    public Material BackgroundMaterial
+    public Color BackgroundColour
     {
         get
         {
-            foreach (MaterialListElement element in _backgroundMaterials)
+            foreach (ColourListElement element in _backgroundColours)
             {
                 if (element.environmentName == EnvironmentName)
                 {
-                    return element.material;
+                    return element.colour;
                 }
             }
 
-            Debug.LogError("Could not find material for environment " + EnvironmentName + "!");
-            return null;
+            Debug.LogError("Could not find background colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
         }
     }
 
@@ -99,6 +114,74 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public Color CrevasseColor
+    {
+        get
+        {
+            foreach (ColourListElement element in _crevasseColours)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.colour;
+                }
+            }
+
+            Debug.LogError("Could not find crevasse colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
+        }
+    }
+
+    public Material AnchorMaterial
+    {
+        get
+        {
+            foreach (MaterialListElement element in _anchorMaterials)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.material;
+                }
+            }
+
+            Debug.LogError("Could not find anchor material for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Sprite PlantSprite
+    {
+        get
+        {
+            foreach(SpriteListElement element in _plantSprites)
+            {
+                if(element.environmentName == EnvironmentName)
+                {
+                    return element.sprite;
+                }
+            }
+
+            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Sprite UIImage
+    {
+        get
+        {
+            foreach (SpriteListElement element in _UIImages)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.sprite;
+                }
+            }
+
+            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
     public int SessionScore { get; private set; }
 
     public int BestSessionScore { get; private set; }
@@ -107,14 +190,18 @@ public class GameManagerScript : MonoBehaviour
 
     public int OldTotalScore { get { return TotalScore - SessionScore; } }
 
+    public int MaxLevel { get { return _levelExperience.Count - 1; } }
+
     //==========================================================================================
     //
     //==========================================================================================
 
     public void StartGame()
     {
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
+        SessionScore = 0;
 
+        //***************************
+        SceneManager.sceneLoaded += this.OnSceneLoaded;
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
@@ -129,9 +216,28 @@ public class GameManagerScript : MonoBehaviour
 
         TotalScore += levelScore;
 
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
-
+        //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
+    }
+
+    public int ComputeLevel(int experience)
+    {
+        int level = 0;
+
+        for(int i = 0;i < _levelExperience.Count; i++)
+        {
+            if(experience > _levelExperience[i])
+            {
+                level++;
+                experience -= _levelExperience[i];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return level;
     }
 
     //==========================================================================================
@@ -180,11 +286,6 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-        /*else if (scene.name == "Menu")
-        {
-            //MenuScript menu = GameObject.FindObjectOfType<MenuScript>();
-            //menu.SwitchPanel(menu.ProgressionPanel);
-        }*/
 
         SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }
@@ -209,4 +310,18 @@ public class AmbianceBgListElement
 {
     public string environmentName;
     public GameObject ambiancePrefab;
+}
+
+[System.Serializable]
+public class SpriteListElement
+{
+    public string environmentName;
+    public Sprite sprite;
+}
+
+[System.Serializable]
+public class ColourListElement
+{
+    public string environmentName;
+    public Color colour;
 }

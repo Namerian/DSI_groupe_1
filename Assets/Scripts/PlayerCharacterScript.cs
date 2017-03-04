@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
+public class PlayerCharacterScript : MonoBehaviour
 {
     //========================================================
     //
@@ -55,11 +55,6 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
         _uiManager = FindObjectOfType<UIManager>();
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
-
-        foreach (ExtremityScript extremity in _extremitiesList)
-        {
-            extremity.RockCollisionListener = this;
-        }
     }
 
     //========================================================
@@ -113,6 +108,7 @@ public class PlayerCharacterScript : MonoBehaviour, IRockCollisionListener
         if (isDead)
         {
             Debug.Log("Player Died!");
+            GetComponent<AudioSource>().Play();
             _isDead = true;
 
             Invoke("ReloadScene", 0.5f);
