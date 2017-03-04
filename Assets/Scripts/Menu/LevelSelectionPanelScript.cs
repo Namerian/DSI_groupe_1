@@ -61,6 +61,8 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
     {
         GameManagerScript.Instance.DifficultyLevel = difficulty;
 
+        _canvasGroup.interactable = false;
+
         switch (difficulty)
         {
             case 0:

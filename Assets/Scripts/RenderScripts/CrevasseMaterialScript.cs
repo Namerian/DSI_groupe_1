@@ -11,9 +11,6 @@ public class CrevasseMaterialScript : MonoBehaviour
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         Color color = GameManagerScript.Instance.CrevasseColor;
 
-        if (color != null)
-        {
-            renderer.color = color;
-        }
+        renderer.color = color;
     }
 }
