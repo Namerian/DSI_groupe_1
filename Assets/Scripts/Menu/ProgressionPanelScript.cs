@@ -138,6 +138,7 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             else
             {
                 _currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.TotalScore);
+                _nextLevelRequiredScore = GameManagerScript.Instance.GetLevelRequirement(_currentLevel);
 
                 if (_currentLevel == GameManagerScript.Instance.MaxLevel)
                 {
@@ -145,8 +146,15 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
                 }
                 else
                 {
+                    _currentLevelScore = GameManagerScript.Instance.TotalScore;
+
+                    for (int i = 0; i < _currentLevel; i++)
+                    {
+                        _currentLevelScore -= GameManagerScript.Instance.GetLevelRequirement(i);
+                    }
+
                     float sliderFill = _currentLevelScore / _nextLevelRequiredScore;
-                    //Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
+                    Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
                     _levelSlider.value = sliderFill;
                 }
             }
