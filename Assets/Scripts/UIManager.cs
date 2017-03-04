@@ -90,7 +90,7 @@ public class UIManager : MonoBehaviour
 
         combo = comb;
         comboText.text = "x" + combo;
-        comboText.fontSize = (50 + (8 * combo));
+        comboText.fontSize = (40 + (8 * combo));
         comboText.color = comboColors[combo];
     }
 
