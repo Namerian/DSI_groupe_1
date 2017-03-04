@@ -65,6 +65,10 @@ public class GameManagerScript : MonoBehaviour
     //
     //==========================================================================================
 
+    //==========================================================================================
+    //
+    //==========================================================================================
+
     void Awake()
     {
         if (_instance == null)
@@ -74,6 +78,10 @@ public class GameManagerScript : MonoBehaviour
 
             TotalScore = PlayerPrefs.GetInt("TotalScore");
             BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
+
+            AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
+            AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
+            AmplitudeHelper.Instance.StartSession();
         }
         else
         {
@@ -88,6 +96,18 @@ public class GameManagerScript : MonoBehaviour
         {
             PlayerPrefs.SetInt("TotalScore", TotalScore);
             PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
+
+            /*int timeInSeconds = (int)Time.time;
+            int seconds = timeInSeconds % 60;
+            int minutes = timeInSeconds % 3600;
+
+            Debug.Log("timeInSeconds: " + Time.time);
+            Debug.Log("timeInSeconds: " + Time.realtimeSinceStartup);
+            Debug.Log("time: " + string.Format("{0:00}:{1:00}", minutes, seconds));*/
+
+            AmplitudeHelper.Instance.LogEvent("Exit Game");
+
+            AmplitudeHelper.Instance.EndSession();
         }
     }
 
@@ -285,6 +305,20 @@ public class GameManagerScript : MonoBehaviour
         TotalScore += levelScore;
 
         //***************************
+        PlayerCharacterScript player = GameObject.FindObjectOfType<PlayerCharacterScript>();
+
+        var customProperties = new Dictionary<string, object>()
+        {
+            {"Environment", EnvironmentName },
+            {"Stage Score", SessionScore },
+            {"Altitude", player.HighestAltitude },
+            {"Character", CharacterName },
+            {"Last Chunk", player.CurrentChunkName }
+        };
+
+        AmplitudeHelper.Instance.LogEvent("Stage End", customProperties);
+
+        //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
     }
 
@@ -367,7 +401,19 @@ public class GameManagerScript : MonoBehaviour
 
         SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    void FillTrackingProperties(Dictionary<string, object> properties)
+    {
+        properties["Total Score"] = TotalScore;
+        properties["Best Session Score"] = BestSessionScore;
+    }
 }
+
+//----------------------------------------------------------------------------------
 
 [System.Serializable]
 public class CharacterListElement

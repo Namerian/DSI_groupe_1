@@ -33,11 +33,13 @@ public class PlayerCharacterScript : MonoBehaviour
     private float _levitationTimer;
 
     private UIManager _uiManager;
-    private int _numOfAnchoredExtremitiesTest;
+    private int _numOfAnchoredExtremities;
 
     private Transform _body;
     private float _originalYpos;
     private float _altitude;
+    private float _highestAltitude;
+    private string _currentChunkName;
 
     private bool _isDead;
 
@@ -46,6 +48,14 @@ public class PlayerCharacterScript : MonoBehaviour
     //========================================================
 
     public float Altitude { get { return _altitude; } }
+
+    public float HighestAltitude { get { return _highestAltitude; } }
+
+    public string CurrentChunkName { get { return _currentChunkName; } }
+
+    //========================================================
+    //
+    //========================================================
 
     // Use this for initialization
     void Start()
@@ -63,20 +73,25 @@ public class PlayerCharacterScript : MonoBehaviour
 
     void Update()
     {
-        _numOfAnchoredExtremitiesTest = 0;
+        _numOfAnchoredExtremities = 0;
         foreach (ExtremityScript extremity in _extremitiesList)
         {
             if (extremity.IsAnchored)
             {
-                _numOfAnchoredExtremitiesTest++;
+                _numOfAnchoredExtremities++;
             }
         }
 
-        _uiManager.UpdateCombo(_numOfAnchoredExtremitiesTest);
+        _uiManager.UpdateCombo(_numOfAnchoredExtremities);
         //Debug.Log(numOfAnchoredExtremitiesTest);
 
         _altitude = _body.position.y - _originalYpos;
         _uiManager.UpdateAltitude(_altitude);
+
+        if(_altitude > _highestAltitude)
+        {
+            _highestAltitude = _altitude;
+        }
     }
 
     //========================================================
@@ -205,6 +220,8 @@ public class PlayerCharacterScript : MonoBehaviour
                         if (collider.CompareTag("Anchor") && anchorScript.IsInUse == false)
                         {
                             //Debug.Log("end of drag, anchored extremity");
+
+                            _currentChunkName = anchorScript.transform.parent.parent.name;
 
                             _draggedExtremity.AnchorExtremity(anchorScript, _anchorBreakForce);
                             GameObject fx = Instantiate(_grabFxPrefab);
