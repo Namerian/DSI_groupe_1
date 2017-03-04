@@ -69,6 +69,9 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
             case 1:
                 GameManagerScript.Instance.EnvironmentName = "Jungle";
                 break;
+            case 2:
+                GameManagerScript.Instance.EnvironmentName = "Mountain";
+                break;
         }
 
         GameManagerScript.Instance.StartGame();

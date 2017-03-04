@@ -55,11 +55,11 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _totalScoreText.text = "Total Score: " + GameManagerScript.Instance.TotalScore;
 
             int currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
-            _currentLevelText.text = "Level " + currentLevel;
+            _currentLevelText.text = "Lvl " + currentLevel;
 
             if(currentLevel < GameManagerScript.Instance.MaxLevel)
             {
-                _nextLevelText.text = "Level " + (currentLevel + 1);
+                _nextLevelText.text = "Lvl " + (currentLevel + 1);
             }
             else
             {

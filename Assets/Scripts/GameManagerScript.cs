@@ -38,13 +38,16 @@ public class GameManagerScript : MonoBehaviour
     private List<AmbianceBgListElement> _ambiancePrefabs;
 
     [SerializeField]
-    private List<MaterialListElement> _crevasseMaterials;
+    private List<ColourListElement> _crevasseColours;
 
     [SerializeField]
     private List<MaterialListElement> _anchorMaterials;
 
     [SerializeField]
     private List<SpriteListElement> _plantSprites;
+
+    [SerializeField]
+    private List<SpriteListElement> _UIImages;
 
     [SerializeField]
     private List<int> _levelExperience;
@@ -111,20 +114,20 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    public Material CrevasseMaterial
+    public Color CrevasseColor
     {
         get
         {
-            foreach (MaterialListElement element in _crevasseMaterials)
+            foreach (ColourListElement element in _crevasseColours)
             {
                 if (element.environmentName == EnvironmentName)
                 {
-                    return element.material;
+                    return element.colour;
                 }
             }
 
-            Debug.LogError("Could not find crevasse material for environment " + EnvironmentName + "!");
-            return null;
+            Debug.LogError("Could not find crevasse colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
         }
     }
 
@@ -152,6 +155,23 @@ public class GameManagerScript : MonoBehaviour
             foreach(SpriteListElement element in _plantSprites)
             {
                 if(element.environmentName == EnvironmentName)
+                {
+                    return element.sprite;
+                }
+            }
+
+            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            return null;
+        }
+    }
+
+    public Sprite UIImage
+    {
+        get
+        {
+            foreach (SpriteListElement element in _UIImages)
+            {
+                if (element.environmentName == EnvironmentName)
                 {
                     return element.sprite;
                 }

@@ -94,7 +94,8 @@ public class ExtremityScript : MonoBehaviour
             GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_TakeItem"));
             fx.transform.position = other.transform.position;
 
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+            //Destroy(other.gameObject);
         } 
     }
 

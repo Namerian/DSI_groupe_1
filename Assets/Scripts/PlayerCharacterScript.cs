@@ -108,6 +108,7 @@ public class PlayerCharacterScript : MonoBehaviour
         if (isDead)
         {
             Debug.Log("Player Died!");
+            GetComponent<AudioSource>().Play();
             _isDead = true;
 
             Invoke("ReloadScene", 0.5f);

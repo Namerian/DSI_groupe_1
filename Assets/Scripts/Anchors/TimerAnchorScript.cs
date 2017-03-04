@@ -24,6 +24,7 @@ public class TimerAnchorScript : AbstractAnchorScript
         {
             startShaking = true;
             GetComponentInChildren<Shake>().shaking = true;
+            GetComponentInChildren<AudioSource>().Play();
         }
 
         if(startShaking)
