@@ -305,12 +305,15 @@ public class GameManagerScript : MonoBehaviour
         TotalScore += levelScore;
 
         //***************************
+        PlayerCharacterScript player = GameObject.FindObjectOfType<PlayerCharacterScript>();
+
         var customProperties = new Dictionary<string, object>()
         {
-            { "Environment", EnvironmentName },
-            { "Stage Score", SessionScore },
-            //{"Altitude", GetComponent<PlayerCharacterScript>().Altitude },
-            {"Character", CharacterName }
+            {"Environment", EnvironmentName },
+            {"Stage Score", SessionScore },
+            {"Altitude", player.HighestAltitude },
+            {"Character", CharacterName },
+            {"Last Chunk", player.CurrentChunkName }
         };
 
         AmplitudeHelper.Instance.LogEvent("Stage End", customProperties);
