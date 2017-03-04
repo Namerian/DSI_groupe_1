@@ -6,7 +6,26 @@ using UnityEngine;
 
 public class AmplitudeHelper
 {
-	public static string AppId;
+    //===============================================================================
+    //
+    //===============================================================================
+
+    private static AmplitudeHelper instance;
+    public static AmplitudeHelper Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new AmplitudeHelper();
+            return instance;
+        }
+    }
+
+    //===============================================================================
+    //
+    //===============================================================================
+
+    public static string AppId;
 
 	public delegate void FillPropertiesDel(Dictionary<string, object> properties);
 	public event FillPropertiesDel FillCustomProperties;
@@ -14,18 +33,11 @@ public class AmplitudeHelper
 	private Amplitude amplitude;
 	private Dictionary<string, object> UserProperties = new Dictionary<string, object>();
 
-	private static AmplitudeHelper instance;
-	public static AmplitudeHelper Instance
-	{
-		get
-		{
-			if (instance == null)
-				instance = new AmplitudeHelper();
-			return instance;
-		}
-	}
+    //===============================================================================
+    //
+    //===============================================================================
 
-	public AmplitudeHelper()
+    public AmplitudeHelper()
 	{
 		amplitude = Amplitude.Instance;
 		amplitude.logging = true;
@@ -50,7 +62,11 @@ public class AmplitudeHelper
 			FillCustomProperties -= d as FillPropertiesDel;
 	}
 
-	public void StartSession()
+    //===============================================================================
+    //
+    //===============================================================================
+
+    public void StartSession()
 	{
 		amplitude.startSession();
 	}
@@ -60,7 +76,11 @@ public class AmplitudeHelper
 		amplitude.endSession();
 	}
 
-	public void LogEvent(string eventToReport)
+    //===============================================================================
+    //
+    //===============================================================================
+
+    public void LogEvent(string eventToReport)
 	{
 		UpdateUserProperties();
 		amplitude.logEvent(eventToReport);
@@ -72,7 +92,11 @@ public class AmplitudeHelper
 		amplitude.logEvent(eventToReport, properties);
 	}
 
-	void UpdateUserProperties()
+    //===============================================================================
+    //
+    //===============================================================================
+
+    void UpdateUserProperties()
 	{
 		UserProperties.Clear();
 
