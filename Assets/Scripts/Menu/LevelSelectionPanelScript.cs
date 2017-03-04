@@ -61,6 +61,8 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
     {
         GameManagerScript.Instance.DifficultyLevel = difficulty;
 
+        _canvasGroup.interactable = false;
+
         switch (difficulty)
         {
             case 0:
@@ -68,6 +70,9 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
                 break;
             case 1:
                 GameManagerScript.Instance.EnvironmentName = "Jungle";
+                break;
+            case 2:
+                GameManagerScript.Instance.EnvironmentName = "Mountain";
                 break;
         }
 
