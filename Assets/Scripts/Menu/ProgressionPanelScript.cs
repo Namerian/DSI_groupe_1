@@ -108,8 +108,8 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
 
-            _lastSessionScoreText.text = "Last Session Score: " + GameManagerScript.Instance.SessionScore;
-            _bestSessionScoreText.text = "Best Session Score: " + GameManagerScript.Instance.BestSessionScore;
+            _lastSessionScoreText.text = "Last Stage Score: " + GameManagerScript.Instance.SessionScore;
+            _bestSessionScoreText.text = "Best Stage Score: " + GameManagerScript.Instance.BestSessionScore;
             _totalScoreText.text = "Cumulated Score: " + GameManagerScript.Instance.TotalScore;
 
             if (!_updated && GameManagerScript.Instance.SessionScore > 0 && _currentLevel < GameManagerScript.Instance.MaxLevel)

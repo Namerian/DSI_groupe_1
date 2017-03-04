@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScoreText()
     {
-        scoreText.text = "" + score;
+        scoreText.text = ((int)score).ToString();
     }
 
     public void UpdateCombo(int comb)
