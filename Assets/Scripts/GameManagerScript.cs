@@ -190,7 +190,7 @@ public class GameManagerScript : MonoBehaviour
 
     public int OldTotalScore { get { return TotalScore - SessionScore; } }
 
-    public int MaxLevel { get { return _levelExperience.Count - 1; } }
+    public int MaxLevel { get { return _levelExperience.Count; } }
 
     //==========================================================================================
     //
@@ -238,6 +238,16 @@ public class GameManagerScript : MonoBehaviour
         }
 
         return level;
+    }
+
+    public int GetLevelRequirement(int level)
+    {
+        if(level > MaxLevel)
+        {
+            return int.MaxValue;
+        }
+
+        return _levelExperience[level];
     }
 
     //==========================================================================================
