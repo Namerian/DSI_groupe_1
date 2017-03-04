@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
 {
+    [SerializeField]
+    private float _sliderScoreGainPerSecond = 2000;
+
     private MenuScript _menu;
 
     private CanvasGroup _canvasGroup;
@@ -15,9 +18,19 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     private Text _nextLevelText;
     private Slider _levelSlider;
 
+    private Button _rewardButton1;
+    private Button _rewardButton2;
+    private Button _rewardButton3;
+
     private bool _active = false;
     private bool _updated = false;
     private bool _updating = false;
+
+    private int _currentLevel;
+    private float _nextLevelRequiredScore;
+    private float _currentTotalScore;
+    private float _currentLevelScore;
+    private float _targetTotalScore;
 
     void Awake()
     {
@@ -30,16 +43,61 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
         _nextLevelText = this.transform.Find("LevelPanel/NextLevelText").GetComponent<Text>();
         _levelSlider = this.transform.Find("LevelPanel/Slider").GetComponent<Slider>();
 
+        _rewardButton1 = this.transform.Find("RewardPanel/RewardButton1").GetComponent<Button>();
+        _rewardButton2 = this.transform.Find("RewardPanel/RewardButton2").GetComponent<Button>();
+        _rewardButton3 = this.transform.Find("RewardPanel/RewardButton3").GetComponent<Button>();
+
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
     }
 
-    // Update is called once per frame
-    /*void Update()
+    void Update()
     {
+        if (_updating)
+        {
+            bool updatingDone = false;
+            float scoreGain = _sliderScoreGainPerSecond * Time.deltaTime;
 
-    }*/
+            _currentTotalScore += scoreGain;
+
+            if (_currentTotalScore > _targetTotalScore)
+            {
+                scoreGain -= (_currentTotalScore - _targetTotalScore);
+                _currentTotalScore = _targetTotalScore;
+                updatingDone = true;
+            }
+
+            _currentLevelScore += scoreGain;
+
+            if (_currentLevelScore >= _nextLevelRequiredScore)
+            {
+                _currentLevelScore -= _nextLevelRequiredScore;
+                _currentLevel++;
+                _nextLevelRequiredScore = GameManagerScript.Instance.GetLevelRequirement(_currentLevel);
+
+                UpdateLevelText(_currentLevel);
+                UpdateRewardButtons(_currentLevel);
+            }
+
+            if(_currentLevel == GameManagerScript.Instance.MaxLevel)
+            {
+                _levelSlider.value = 1;
+            }
+            else
+            {
+                float sliderFill = _currentLevelScore / _nextLevelRequiredScore;
+                //Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
+                _levelSlider.value = sliderFill;
+            }
+
+            if (updatingDone)
+            {
+                _updated = true;
+                _updating = false;
+            }
+        }
+    }
 
     public void OnEnter()
     {
@@ -54,22 +112,47 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _bestSessionScoreText.text = "Best Session Score: " + GameManagerScript.Instance.BestSessionScore;
             _totalScoreText.text = "Total Score: " + GameManagerScript.Instance.TotalScore;
 
-            int currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
-            _currentLevelText.text = "Lvl " + currentLevel;
-
-            if(currentLevel < GameManagerScript.Instance.MaxLevel)
+            if (!_updated && GameManagerScript.Instance.SessionScore > 0 && _currentLevel < GameManagerScript.Instance.MaxLevel)
             {
-                _nextLevelText.text = "Lvl " + (currentLevel + 1);
+                _updating = true;
+
+                _currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
+                _currentTotalScore = GameManagerScript.Instance.OldTotalScore;
+                _currentLevelScore = GameManagerScript.Instance.OldTotalScore;
+
+                for (int i = 0; i < _currentLevel; i++)
+                {
+                    _currentLevelScore -= GameManagerScript.Instance.GetLevelRequirement(i);
+                }
+
+                _nextLevelRequiredScore = GameManagerScript.Instance.GetLevelRequirement(_currentLevel);
+                _targetTotalScore = GameManagerScript.Instance.TotalScore;
+
+                float initialSliderFill = _currentLevelScore / _nextLevelRequiredScore;
+                _levelSlider.value = initialSliderFill;
+
+                //Debug.Log("start: total score = " + _currentTotalScore);
+                //Debug.Log("start: rest score = " + _currentLevelScore);
+                //Debug.Log("start: target score = " + _targetTotalScore);
             }
             else
             {
-                _nextLevelText.text = "Max Level";
+                _currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.TotalScore);
+
+                if (_currentLevel == GameManagerScript.Instance.MaxLevel)
+                {
+                    _levelSlider.value = 1;
+                }
+                else
+                {
+                    float sliderFill = _currentLevelScore / _nextLevelRequiredScore;
+                    //Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
+                    _levelSlider.value = sliderFill;
+                }
             }
 
-            if (!_updated && GameManagerScript.Instance.SessionScore > 0)
-            {
-                _updating = true;
-            }
+            UpdateLevelText(_currentLevel);
+            UpdateRewardButtons(_currentLevel);
         }
     }
 
@@ -81,11 +164,61 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
+
+            if (_updating)
+            {
+                _updated = true;
+                _updating = false;
+            }
         }
     }
 
     public void OnButtonBack()
     {
         _menu.SwitchPanel(_menu.LevelSelectionPanel);
+    }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    private void UpdateLevelText(int currentLevel)
+    {
+        if (currentLevel >= GameManagerScript.Instance.MaxLevel - 1)
+        {
+            _currentLevelText.text = "Lvl " + (GameManagerScript.Instance.MaxLevel);
+
+            _nextLevelText.text = "Max Level";
+        }
+        else
+        {
+            _currentLevelText.text = "Lvl " + (currentLevel + 1);
+
+            _nextLevelText.text = "Lvl " + (currentLevel + 2);
+        }
+    }
+
+    private void UpdateRewardButtons(int currentLevel)
+    {
+        if(currentLevel >= 4)
+        {
+            ColorBlock block = _rewardButton1.colors;
+            block.disabledColor = new Color(1, 1, 1, 0.9f);
+            _rewardButton1.colors = block;
+        }
+
+        if(currentLevel >= 9)
+        {
+            ColorBlock block = _rewardButton2.colors;
+            block.disabledColor = new Color(1, 1, 1, 0.9f);
+            _rewardButton2.colors = block;
+        }
+
+        if (currentLevel >= 14)
+        {
+            ColorBlock block = _rewardButton3.colors;
+            block.disabledColor = new Color(1, 1, 1, 0.9f);
+            _rewardButton3.colors = block;
+        }
     }
 }
