@@ -57,7 +57,7 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
         if (_updating)
         {
             bool updatingDone = false;
-            float scoreGain = _sliderScoreGainPerSecond * Time.deltaTime;
+            float scoreGain = _sliderScoreGainPerSecond * (_nextLevelRequiredScore/_sliderScoreGainPerSecond) * Time.deltaTime;
 
             _currentTotalScore += scoreGain;
 
