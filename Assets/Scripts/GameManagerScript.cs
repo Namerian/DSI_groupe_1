@@ -52,6 +52,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<int> _levelExperience;
 
+    [SerializeField]
+    private List<float> _scoreMultipliers;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -179,6 +182,19 @@ public class GameManagerScript : MonoBehaviour
 
             Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
             return null;
+        }
+    }
+
+    public float ScoreMultiplier
+    {
+        get
+        {
+            if(DifficultyLevel >= _scoreMultipliers.Count)
+            {
+                return 1;
+            }
+
+            return _scoreMultipliers[DifficultyLevel];
         }
     }
 
@@ -334,4 +350,11 @@ public class ColourListElement
 {
     public string environmentName;
     public Color colour;
+}
+
+[System.Serializable]
+public class ScoreMultiplierListElement
+{
+    public int difficulty;
+    public float multiplier;
 }
