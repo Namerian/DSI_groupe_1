@@ -101,9 +101,9 @@ public class GameManagerScript : MonoBehaviour
     {
         get
         {
-            foreach(AmbianceBgListElement element in _ambiancePrefabs)
+            foreach (AmbianceBgListElement element in _ambiancePrefabs)
             {
-                if(element.environmentName == EnvironmentName)
+                if (element.environmentName == EnvironmentName)
                 {
                     return element.ambiancePrefab;
                 }
@@ -152,9 +152,9 @@ public class GameManagerScript : MonoBehaviour
     {
         get
         {
-            foreach(SpriteListElement element in _plantSprites)
+            foreach (SpriteListElement element in _plantSprites)
             {
-                if(element.environmentName == EnvironmentName)
+                if (element.environmentName == EnvironmentName)
                 {
                     return element.sprite;
                 }
@@ -209,7 +209,7 @@ public class GameManagerScript : MonoBehaviour
     {
         SessionScore = levelScore;
 
-        if(levelScore > BestSessionScore)
+        if (levelScore > BestSessionScore)
         {
             BestSessionScore = levelScore;
         }
@@ -224,9 +224,9 @@ public class GameManagerScript : MonoBehaviour
     {
         int level = 0;
 
-        for(int i = 0;i < _levelExperience.Count; i++)
+        for (int i = 0; i < _levelExperience.Count; i++)
         {
-            if(experience > _levelExperience[i])
+            if (experience > _levelExperience[i])
             {
                 level++;
                 experience -= _levelExperience[i];
@@ -242,7 +242,7 @@ public class GameManagerScript : MonoBehaviour
 
     public int GetLevelRequirement(int level)
     {
-        if(level > MaxLevel)
+        if (level > _levelExperience.Count - 1)
         {
             return int.MaxValue;
         }
@@ -256,7 +256,7 @@ public class GameManagerScript : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if(this != _instance)
+        if (this != _instance)
         {
             Debug.LogError("OnSceneLoaded called in wrong GameManager instance!");
             return;

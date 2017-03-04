@@ -68,24 +68,19 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
                 _currentLevel++;
                 _nextLevelRequiredScore = GameManagerScript.Instance.GetLevelRequirement(_currentLevel);
 
-                _currentLevelText.text = "Lvl " + (_currentLevel + 1);
-
-                if (_currentLevel < GameManagerScript.Instance.MaxLevel)
-                {
-                    _nextLevelText.text = "Lvl " + (_currentLevel + 2);
-                }
-                else
-                {
-                    _nextLevelText.text = "Max Level";
-
-                    updatingDone = true;
-                    _currentLevelScore = 0;
-                }
+                UpdateLevelText(_currentLevel);
             }
 
-            float sliderFill = _currentLevelScore / _nextLevelRequiredScore;
-            //Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
-            _levelSlider.value = sliderFill;
+            if(_currentLevel == GameManagerScript.Instance.MaxLevel)
+            {
+                _levelSlider.value = 1;
+            }
+            else
+            {
+                float sliderFill = _currentLevelScore / _nextLevelRequiredScore;
+                //Debug.Log("slider update: current level score = " + _currentLevelScore + ";  next level = " + _nextLevelRequiredScore + ";  slider fill = " + sliderFill);
+                _levelSlider.value = sliderFill;
+            }
 
             if (updatingDone)
             {
@@ -109,18 +104,10 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _totalScoreText.text = "Total Score: " + GameManagerScript.Instance.TotalScore;
 
             int currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
-            _currentLevelText.text = "Lvl " + (currentLevel + 1);
 
-            if (currentLevel < GameManagerScript.Instance.MaxLevel)
-            {
-                _nextLevelText.text = "Lvl " + (currentLevel + 2);
-            }
-            else
-            {
-                _nextLevelText.text = "Max Level";
-            }
+            UpdateLevelText(currentLevel);
 
-            if (!_updated && GameManagerScript.Instance.SessionScore > 0 && currentLevel < GameManagerScript.Instance.MaxLevel)
+            if (!_updated && GameManagerScript.Instance.SessionScore > 0 && _currentLevel < GameManagerScript.Instance.MaxLevel)
             {
                 _updating = true;
 
@@ -160,5 +147,25 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     public void OnButtonBack()
     {
         _menu.SwitchPanel(_menu.LevelSelectionPanel);
+    }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    private void UpdateLevelText(int currentLevel)
+    {
+        if (currentLevel >= GameManagerScript.Instance.MaxLevel - 1)
+        {
+            _currentLevelText.text = "Lvl " + (GameManagerScript.Instance.MaxLevel);
+
+            _nextLevelText.text = "Max Level";
+        }
+        else
+        {
+            _currentLevelText.text = "Lvl " + (currentLevel + 1);
+
+            _nextLevelText.text = "Lvl " + (currentLevel + 2);
+        }
     }
 }
