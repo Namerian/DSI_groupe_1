@@ -41,6 +41,12 @@ public class GameManagerScript : MonoBehaviour
     private List<ColourListElement> _crevasseColours;
 
     [SerializeField]
+    private List<ColourListElement> _wallColours;
+
+    [SerializeField]
+    private List<ColourListElement> _wallShadowColours;
+
+    [SerializeField]
     private List<MaterialListElement> _anchorMaterials;
 
     [SerializeField]
@@ -134,6 +140,40 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public Color WallColor
+    {
+        get
+        {
+            foreach (ColourListElement element in _wallColours)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.colour;
+                }
+            }
+
+            Debug.LogError("Could not find wall colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
+        }
+    }
+
+    public Color WallShadowColor
+    {
+        get
+        {
+            foreach (ColourListElement element in _wallShadowColours)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.colour;
+                }
+            }
+
+            Debug.LogError("Could not find wall shadow colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
+        }
+    }
+
     public Material AnchorMaterial
     {
         get
@@ -180,7 +220,7 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
 
-            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            Debug.LogError("Could not find UI image for environment " + EnvironmentName + "!");
             return null;
         }
     }
