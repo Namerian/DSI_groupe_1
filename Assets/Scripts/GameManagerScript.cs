@@ -71,11 +71,23 @@ public class GameManagerScript : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            TotalScore = PlayerPrefs.GetInt("TotalScore");
+            BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
         }
         else
         {
             //Debug.LogError("GameManager has already been instantiated!");
             Destroy(this.gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        if(_instance == this)
+        {
+            PlayerPrefs.SetInt("TotalScore", TotalScore);
+            PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
         }
     }
 
