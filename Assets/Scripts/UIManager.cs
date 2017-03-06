@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScoreText()
     {
-        scoreText.text = "" + score;
+        scoreText.text = ((int)score).ToString();
     }
 
     public void UpdateCombo(int comb)
@@ -90,7 +90,7 @@ public class UIManager : MonoBehaviour
 
         combo = comb;
         comboText.text = "x" + combo;
-        comboText.fontSize = (50 + (8 * combo));
+        comboText.fontSize = (40 + (8 * combo));
         comboText.color = comboColors[combo];
     }
 
@@ -120,7 +120,7 @@ public class UIManager : MonoBehaviour
         addScoreText.transform.DOScaleY(1f, 0.1f);
         yield return null;
         addScoreText.transform.DOScaleY(0.5f, 0.5f);
-        score += scoreToAdd;
+        score += scoreToAdd * GameManagerScript.Instance.ScoreMultiplier;
         yield return new WaitForSeconds(1);
         addScoreText.transform.DOScaleY(0, 0.5f);
         yield return new WaitForSeconds(0.5f);
@@ -128,7 +128,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateScore()
     {
-        score += combo;
+        score += combo * GameManagerScript.Instance.ScoreMultiplier;
 
         Invoke("UpdateScore", _scoreInterval);
     }

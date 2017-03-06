@@ -41,6 +41,12 @@ public class GameManagerScript : MonoBehaviour
     private List<ColourListElement> _crevasseColours;
 
     [SerializeField]
+    private List<ColourListElement> _wallColours;
+
+    [SerializeField]
+    private List<ColourListElement> _wallShadowColours;
+
+    [SerializeField]
     private List<MaterialListElement> _anchorMaterials;
 
     [SerializeField]
@@ -52,6 +58,13 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<int> _levelExperience;
 
+    [SerializeField]
+    private List<float> _scoreMultipliers;
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -61,12 +74,45 @@ public class GameManagerScript : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
+
             DontDestroyOnLoad(this.gameObject);
+
+            TotalScore = PlayerPrefs.GetInt("TotalScore");
+            BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
+
+            AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
+            AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
+            //AmplitudeHelper.Instance.StartSession();
+            AmplitudeHelper.Instance.LogEvent("Start Game");
         }
         else
         {
             //Debug.LogError("GameManager has already been instantiated!");
             Destroy(this.gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        if(_instance == this)
+        {
+            PlayerPrefs.SetInt("TotalScore", TotalScore);
+            PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
+
+            /*int timeInSeconds = (int)Time.time;
+            int seconds = timeInSeconds % 60;
+            int minutes = timeInSeconds % 3600;
+
+            Debug.Log("timeInSeconds: " + Time.time);
+            Debug.Log("timeInSeconds: " + Time.realtimeSinceStartup);
+            Debug.Log("time: " + string.Format("{0:00}:{1:00}", minutes, seconds));*/
+
+            //Amplitude.Instance.logEvent("Exit Game");
+            //Amplitude.Instance.endSession();
+
+            AmplitudeHelper.Instance.LogEvent("Exit Game");
+            //AmplitudeHelper.Instance.EndSession();
         }
     }
 
@@ -131,6 +177,40 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public Color WallColor
+    {
+        get
+        {
+            foreach (ColourListElement element in _wallColours)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.colour;
+                }
+            }
+
+            Debug.LogError("Could not find wall colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
+        }
+    }
+
+    public Color WallShadowColor
+    {
+        get
+        {
+            foreach (ColourListElement element in _wallShadowColours)
+            {
+                if (element.environmentName == EnvironmentName)
+                {
+                    return element.colour;
+                }
+            }
+
+            Debug.LogError("Could not find wall shadow colour for environment " + EnvironmentName + "!");
+            return Color.magenta;
+        }
+    }
+
     public Material AnchorMaterial
     {
         get
@@ -177,8 +257,21 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
 
-            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
+            Debug.LogError("Could not find UI image for environment " + EnvironmentName + "!");
             return null;
+        }
+    }
+
+    public float ScoreMultiplier
+    {
+        get
+        {
+            if(DifficultyLevel >= _scoreMultipliers.Count)
+            {
+                return 1;
+            }
+
+            return _scoreMultipliers[DifficultyLevel];
         }
     }
 
@@ -201,7 +294,7 @@ public class GameManagerScript : MonoBehaviour
         SessionScore = 0;
 
         //***************************
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
+        
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
@@ -215,6 +308,24 @@ public class GameManagerScript : MonoBehaviour
         }
 
         TotalScore += levelScore;
+
+        //***************************
+        PlayerPrefs.SetInt("TotalScore", TotalScore);
+        PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
+
+        //***************************
+        PlayerCharacterScript player = GameObject.FindObjectOfType<PlayerCharacterScript>();
+
+        var customProperties = new Dictionary<string, object>()
+        {
+            {"Environment", EnvironmentName },
+            {"Stage Score", SessionScore },
+            {"Altitude", player.HighestAltitude },
+            {"Character", CharacterName },
+            {"Last Chunk", player.CurrentChunkName }
+        };
+
+        AmplitudeHelper.Instance.LogEvent("Stage End", customProperties);
 
         //***************************
         SceneManager.LoadSceneAsync("Scenes/Menu");
@@ -296,10 +407,20 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
+    }
 
-        SceneManager.sceneLoaded -= this.OnSceneLoaded;
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    void FillTrackingProperties(Dictionary<string, object> properties)
+    {
+        properties["Total Score"] = TotalScore;
+        properties["Best Session Score"] = BestSessionScore;
     }
 }
+
+//----------------------------------------------------------------------------------
 
 [System.Serializable]
 public class CharacterListElement
@@ -334,4 +455,11 @@ public class ColourListElement
 {
     public string environmentName;
     public Color colour;
+}
+
+[System.Serializable]
+public class ScoreMultiplierListElement
+{
+    public int difficulty;
+    public float multiplier;
 }
