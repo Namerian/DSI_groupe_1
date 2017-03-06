@@ -33,6 +33,8 @@ public class CameraScript : MonoBehaviour
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
+
+        _acceleration = GameManagerScript.Instance.GetAccelerationStep(0);
     }
 
     // Update is called once per frame
