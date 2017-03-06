@@ -165,7 +165,14 @@ public class GameManagerScript : MonoBehaviour
             BestSessionScore = levelScore;
         }
 
+        int oldLevel = ComputeLevel(TotalScore)+1;
         TotalScore += levelScore;
+        int newLevel = ComputeLevel(TotalScore)+1;
+
+        if (newLevel > oldLevel && newLevel % 5 == 0)
+        {
+            AmplitudeHelper.Instance.LogEvent("lvl " + newLevel + " reached");
+        }
 
         //***************************
         PlayerPrefs.SetInt("TotalScore", TotalScore);
@@ -221,9 +228,9 @@ public class GameManagerScript : MonoBehaviour
 
     public float GetAccelerationStep(int altitude)
     {
-        foreach(AccelerationStepElement element in _environment.accelerationSteps)
+        foreach (AccelerationStepElement element in _environment.accelerationSteps)
         {
-            if(element.height >= altitude)
+            if (element.height >= altitude)
             {
                 return element.acceleration;
             }
