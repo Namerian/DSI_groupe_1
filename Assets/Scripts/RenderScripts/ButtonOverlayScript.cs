@@ -13,7 +13,9 @@ public class ButtonOverlayScript : MonoBehaviour
     {
         _button = this.transform.parent.GetComponent<Button>();
         _image = GetComponent<Image>();
-        _isInteractable = _button.interactable;
+
+        _isInteractable = true;
+        _image.enabled = false;
     }
 
     // Update is called once per frame

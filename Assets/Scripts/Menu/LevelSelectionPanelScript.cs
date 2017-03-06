@@ -5,56 +5,71 @@ using UnityEngine.UI;
 
 public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
 {
+    [SerializeField]
+    private List<ButtonListElement> _stageButtons;
+
+    [SerializeField]
+    private List<ButtonListElement> _characterButtons;
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
     private MenuScript _menu;
 
     private CanvasGroup _canvasGroup;
-    private Button _stage2Button;
-    private Button _stage3Button;
-    private Button _char2Button;
-    private Button _char3Button;
+    //private Button _stage2Button;
+    //private Button _stage3Button;
+    //private Button _char2Button;
+    //private Button _char3Button;
     private Outline _char1Outline;
     private Outline _char2Outline;
     private Outline _char3Outline;
     private CanvasGroup _loadingPanelCanvasGroup;
+    private List<Outline> _characterButtonOutlines = new List<Outline>();
 
     private bool _active;
+
+    //==========================================================================================
+    //
+    //==========================================================================================
 
     void Awake()
     {
         _menu = this.transform.parent.GetComponent<MenuScript>();
 
         _canvasGroup = GetComponent<CanvasGroup>();
-        _stage2Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel2").GetComponent<Button>();
-        _stage3Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel3").GetComponent<Button>();
-        
-        _char1Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPoulpe").GetComponent<Outline>();
+        //_stage2Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel2").GetComponent<Button>();
+        //_stage3Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel3").GetComponent<Button>();
 
-        _char2Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonChat").GetComponent<Outline>();
-        _char2Button = _char2Outline.GetComponent<Button>();
-
-        _char3Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPerso3").GetComponent<Outline>();
-        _char3Button = _char3Outline.GetComponent<Button>();
+        //_char1Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPoulpe").GetComponent<Outline>();
+        //_char2Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonChat").GetComponent<Outline>();
+        //_char2Button = _char2Outline.GetComponent<Button>();
+        //_char3Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPerso3").GetComponent<Outline>();
+        //_char3Button = _char3Outline.GetComponent<Button>();
+        foreach (ButtonListElement element in _characterButtons)
+        {
+            _characterButtonOutlines.Add(element.button.GetComponent<Outline>());
+        }
 
         _loadingPanelCanvasGroup = this.transform.Find("PanelLoading").GetComponent<CanvasGroup>();
 
-        _stage2Button.interactable = false;
-        _stage3Button.interactable = false;
-        _char2Button.interactable = false;
-        _char3Button.interactable = false;
-        _char1Outline.enabled = false;
-        _char2Outline.enabled = false;
-        _char3Outline.enabled = false;
+        //_stage2Button.interactable = false;
+        //_stage3Button.interactable = false;
+        //_char2Button.interactable = false;
+        //_char3Button.interactable = false;
+        //_char1Outline.enabled = false;
+        //_char2Outline.enabled = false;
+        //_char3Outline.enabled = false;
 
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
     }
 
-    // Update is called once per frame
-    /*void Update()
-    {
-
-    }*/
+    //==========================================================================================
+    //
+    //==========================================================================================
 
     public void OnEnter()
     {
@@ -67,22 +82,32 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
 
             int level = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.TotalScore);
 
-            if (level >= 4)
+            foreach (ButtonListElement element in _stageButtons)
             {
-                _stage2Button.interactable = true;
+                if (level + 1 >= element.level)
+                {
+                    element.button.interactable = true;
+                }
+                else
+                {
+                    element.button.interactable = false;
+                }
             }
 
-            if (level >= 9)
+            foreach (ButtonListElement element in _characterButtons)
             {
-                _char2Button.interactable = true;
+                if (level + 1 >= element.level)
+                {
+                    element.button.interactable = true;
+                }
+                else
+                {
+                    element.button.interactable = false;
+                }
             }
 
-            if (level >= 14)
-            {
-                _stage3Button.interactable = true;
-            }
-
-            OnCharacterButton(0);
+            OnCharacterButton("Poulpe");
+            OnCharacterHighlight(_characterButtons[0].button.GetComponent<Outline>());
         }
     }
 
@@ -96,6 +121,10 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
             _canvasGroup.blocksRaycasts = false;
         }
     }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
 
     public void OnBackButton()
     {
@@ -130,22 +159,34 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
         GameManagerScript.Instance.StartGame();
     }
 
-    public void OnCharacterButton(int id)
+    public void OnCharacterButton(string name)
     {
-        switch (id)
+        GameManagerScript.Instance.CharacterName = name;
+    }
+
+    public void OnCharacterHighlight(Outline outlineToHighlight)
+    {
+        foreach (Outline outline in _characterButtonOutlines)
         {
-            case 0:
-                GameManagerScript.Instance.CharacterName = "Poulpe";
-                _char1Outline.enabled = true;
-                _char2Outline.enabled = false;
-                _char3Outline.enabled = false;
-                break;
-            case 1:
-                GameManagerScript.Instance.CharacterName = "Chat";
-                _char1Outline.enabled = false;
-                _char2Outline.enabled = true;
-                _char3Outline.enabled = false;
-                break;
+            if (outline == outlineToHighlight)
+            {
+                outline.enabled = true;
+            }
+            else
+            {
+                outline.enabled = false;
+            }
         }
     }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+}
+
+[System.Serializable]
+public class ButtonListElement
+{
+    public int level;
+    public Button button;
 }
