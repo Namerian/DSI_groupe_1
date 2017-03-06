@@ -24,13 +24,17 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
         _menu = this.transform.parent.GetComponent<MenuScript>();
 
         _canvasGroup = GetComponent<CanvasGroup>();
-        _stage2Button = this.transform.Find("PanelNiveaux/ButtonLevel2").GetComponent<Button>();
-        _stage3Button = this.transform.Find("PanelNiveaux/ButtonLevel3").GetComponent<Button>();
-        _char2Button = this.transform.Find("PanelPersos/ButtonChat").GetComponent<Button>();
-        _char3Button = this.transform.Find("PanelPersos/ButtonPerso3").GetComponent<Button>();
-        _char1Outline = this.transform.Find("PanelPersos/ButtonPoulpe").GetComponent<Outline>();
-        _char2Outline = this.transform.Find("PanelPersos/ButtonChat").GetComponent<Outline>();
-        _char3Outline = this.transform.Find("PanelPersos/ButtonPerso3").GetComponent<Outline>();
+        _stage2Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel2").GetComponent<Button>();
+        _stage3Button = this.transform.Find("PanelNiveaux/ScrollViewStages/Viewport/Content/ButtonLevel3").GetComponent<Button>();
+        
+        _char1Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPoulpe").GetComponent<Outline>();
+
+        _char2Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonChat").GetComponent<Outline>();
+        _char2Button = _char2Outline.GetComponent<Button>();
+
+        _char3Outline = this.transform.Find("PanelPersos/ScrollViewCharacters/Viewport/Content/ButtonPerso3").GetComponent<Outline>();
+        _char3Button = _char3Outline.GetComponent<Button>();
+
         _loadingPanelCanvasGroup = this.transform.Find("PanelLoading").GetComponent<CanvasGroup>();
 
         _stage2Button.interactable = false;
