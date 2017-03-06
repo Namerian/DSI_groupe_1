@@ -32,38 +32,16 @@ public class GameManagerScript : MonoBehaviour
     private List<CharacterListElement> _characterPrefabs;
 
     [SerializeField]
-    private List<ColourListElement> _backgroundColours;
-
-    [SerializeField]
-    private List<AmbianceBgListElement> _ambiancePrefabs;
-
-    [SerializeField]
-    private List<ColourListElement> _crevasseColours;
-
-    [SerializeField]
-    private List<ColourListElement> _wallColours;
-
-    [SerializeField]
-    private List<ColourListElement> _wallShadowColours;
-
-    [SerializeField]
-    private List<MaterialListElement> _anchorMaterials;
-
-    [SerializeField]
-    private List<SpriteListElement> _plantSprites;
-
-    [SerializeField]
-    private List<SpriteListElement> _UIImages;
+    private List<EnvironmentInfo> _environmentInfoList;
 
     [SerializeField]
     private List<int> _levelExperience;
 
-    [SerializeField]
-    private List<float> _scoreMultipliers;
-
     //==========================================================================================
     //
     //==========================================================================================
+
+    private EnvironmentInfo _environment;
 
     //==========================================================================================
     //
@@ -83,197 +61,32 @@ public class GameManagerScript : MonoBehaviour
 
             AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
             AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
-            //AmplitudeHelper.Instance.StartSession();
             AmplitudeHelper.Instance.LogEvent("Start Game");
         }
         else
         {
-            //Debug.LogError("GameManager has already been instantiated!");
             Destroy(this.gameObject);
         }
     }
 
     void OnDestroy()
     {
-        if(_instance == this)
+        if (_instance == this)
         {
             PlayerPrefs.SetInt("TotalScore", TotalScore);
             PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
 
-            /*int timeInSeconds = (int)Time.time;
-            int seconds = timeInSeconds % 60;
-            int minutes = timeInSeconds % 3600;
-
-            Debug.Log("timeInSeconds: " + Time.time);
-            Debug.Log("timeInSeconds: " + Time.realtimeSinceStartup);
-            Debug.Log("time: " + string.Format("{0:00}:{1:00}", minutes, seconds));*/
-
-            //Amplitude.Instance.logEvent("Exit Game");
-            //Amplitude.Instance.endSession();
-
             AmplitudeHelper.Instance.LogEvent("Exit Game");
-            //AmplitudeHelper.Instance.EndSession();
         }
     }
 
     //==========================================================================================
-    //
+    // Properties
     //==========================================================================================
 
     public int DifficultyLevel { get; set; }
 
     public string CharacterName { get; set; }
-
-    public string EnvironmentName { get; set; }
-
-    public Color BackgroundColour
-    {
-        get
-        {
-            foreach (ColourListElement element in _backgroundColours)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.colour;
-                }
-            }
-
-            Debug.LogError("Could not find background colour for environment " + EnvironmentName + "!");
-            return Color.magenta;
-        }
-    }
-
-    public GameObject AmbianceBackground
-    {
-        get
-        {
-            foreach (AmbianceBgListElement element in _ambiancePrefabs)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.ambiancePrefab;
-                }
-            }
-
-            Debug.LogError("Could not find ambiance prefab for environment " + EnvironmentName + "!");
-            return null;
-        }
-    }
-
-    public Color CrevasseColor
-    {
-        get
-        {
-            foreach (ColourListElement element in _crevasseColours)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.colour;
-                }
-            }
-
-            Debug.LogError("Could not find crevasse colour for environment " + EnvironmentName + "!");
-            return Color.magenta;
-        }
-    }
-
-    public Color WallColor
-    {
-        get
-        {
-            foreach (ColourListElement element in _wallColours)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.colour;
-                }
-            }
-
-            Debug.LogError("Could not find wall colour for environment " + EnvironmentName + "!");
-            return Color.magenta;
-        }
-    }
-
-    public Color WallShadowColor
-    {
-        get
-        {
-            foreach (ColourListElement element in _wallShadowColours)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.colour;
-                }
-            }
-
-            Debug.LogError("Could not find wall shadow colour for environment " + EnvironmentName + "!");
-            return Color.magenta;
-        }
-    }
-
-    public Material AnchorMaterial
-    {
-        get
-        {
-            foreach (MaterialListElement element in _anchorMaterials)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.material;
-                }
-            }
-
-            Debug.LogError("Could not find anchor material for environment " + EnvironmentName + "!");
-            return null;
-        }
-    }
-
-    public Sprite PlantSprite
-    {
-        get
-        {
-            foreach (SpriteListElement element in _plantSprites)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.sprite;
-                }
-            }
-
-            Debug.LogError("Could not find plant sprite for environment " + EnvironmentName + "!");
-            return null;
-        }
-    }
-
-    public Sprite UIImage
-    {
-        get
-        {
-            foreach (SpriteListElement element in _UIImages)
-            {
-                if (element.environmentName == EnvironmentName)
-                {
-                    return element.sprite;
-                }
-            }
-
-            Debug.LogError("Could not find UI image for environment " + EnvironmentName + "!");
-            return null;
-        }
-    }
-
-    public float ScoreMultiplier
-    {
-        get
-        {
-            if(DifficultyLevel >= _scoreMultipliers.Count)
-            {
-                return 1;
-            }
-
-            return _scoreMultipliers[DifficultyLevel];
-        }
-    }
 
     public int SessionScore { get; private set; }
 
@@ -286,6 +99,51 @@ public class GameManagerScript : MonoBehaviour
     public int MaxLevel { get { return _levelExperience.Count; } }
 
     //==========================================================================================
+    // Environment Properties
+    //==========================================================================================
+
+    public string EnvironmentName
+    {
+        get { return _environment.name; }
+        set
+        {
+            _environment = null;
+
+            foreach (EnvironmentInfo environment in _environmentInfoList)
+            {
+                if (value == environment.name)
+                {
+                    _environment = environment;
+                    break;
+                }
+            }
+
+            if (_environment == null)
+            {
+                Debug.LogError("Could not find an Environment called " + value);
+            }
+        }
+    }
+
+    public Color BackgroundColour { get { return _environment.backgroundColour; } }
+
+    public GameObject AmbianceBackground { get { return _environment.ambiancePrefab; } }
+
+    public Color CrevasseColor { get { return _environment.crevasseColour; } }
+
+    public Color WallColor { get { return _environment.wallColour; } }
+
+    public Color WallShadowColor { get { return _environment.wallShadowColour; } }
+
+    public Material AnchorMaterial { get { return _environment.anchorMaterial; } }
+
+    public Sprite PlantSprite { get { return _environment.plantSprite; } }
+
+    public Sprite UIImage { get { return _environment.uiImage; } }
+
+    public float ScoreMultiplier { get { return _environment.scoreMultiplier; } }
+
+    //==========================================================================================
     //
     //==========================================================================================
 
@@ -294,7 +152,7 @@ public class GameManagerScript : MonoBehaviour
         SessionScore = 0;
 
         //***************************
-        
+
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
@@ -307,7 +165,14 @@ public class GameManagerScript : MonoBehaviour
             BestSessionScore = levelScore;
         }
 
+        int oldLevel = ComputeLevel(TotalScore)+1;
         TotalScore += levelScore;
+        int newLevel = ComputeLevel(TotalScore)+1;
+
+        if (newLevel > oldLevel && newLevel % 5 == 0)
+        {
+            AmplitudeHelper.Instance.LogEvent("lvl " + newLevel + " reached");
+        }
 
         //***************************
         PlayerPrefs.SetInt("TotalScore", TotalScore);
@@ -361,6 +226,19 @@ public class GameManagerScript : MonoBehaviour
         return _levelExperience[level];
     }
 
+    public float GetAccelerationStep(int altitude)
+    {
+        foreach (AccelerationStepElement element in _environment.accelerationSteps)
+        {
+            if (element.height >= altitude)
+            {
+                return element.acceleration;
+            }
+        }
+
+        return 1;
+    }
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -375,8 +253,6 @@ public class GameManagerScript : MonoBehaviour
 
         if (scene.name == "TestLevel")
         {
-            //Debug.Log("OnSceneLoaded: TestLevel called!");
-
             int charIndex = 0;
 
             for (int i = 0; i < _characterPrefabs.Count; i++)
@@ -421,6 +297,8 @@ public class GameManagerScript : MonoBehaviour
 }
 
 //----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 
 [System.Serializable]
 public class CharacterListElement
@@ -430,36 +308,27 @@ public class CharacterListElement
 }
 
 [System.Serializable]
-public class MaterialListElement
+public class AccelerationStepElement
 {
-    public string environmentName;
-    public Material material;
+    public int height;
+    public float acceleration;
 }
 
 [System.Serializable]
-public class AmbianceBgListElement
+public class EnvironmentInfo
 {
-    public string environmentName;
+    public string name;
+    public List<GameObject> uniqueChunks;
+    public List<AccelerationStepElement> accelerationSteps;
+    public float scoreMultiplier;
+    public float minRockSpawnTimer;
+    public float maxRockSpawnTimer;
+    public Color backgroundColour;
     public GameObject ambiancePrefab;
-}
-
-[System.Serializable]
-public class SpriteListElement
-{
-    public string environmentName;
-    public Sprite sprite;
-}
-
-[System.Serializable]
-public class ColourListElement
-{
-    public string environmentName;
-    public Color colour;
-}
-
-[System.Serializable]
-public class ScoreMultiplierListElement
-{
-    public int difficulty;
-    public float multiplier;
+    public Color crevasseColour;
+    public Color wallColour;
+    public Color wallShadowColour;
+    public Material anchorMaterial;
+    public Sprite plantSprite;
+    public Sprite uiImage;
 }
