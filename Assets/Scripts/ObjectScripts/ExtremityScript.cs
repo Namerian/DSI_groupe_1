@@ -114,7 +114,7 @@ public class ExtremityScript : MonoBehaviour
 
         _hingeJoint.connectedBody = anchor.GetComponent<Rigidbody2D>();
 
-        if (anchor.GetComponent<MovingAnchorScript>()) _hingeJoint.breakForce = breakForce;  //On change la breakforce uniquement si l'anchor est un moving anchor
+        if (anchor.GetComponent<MovingAnchorScript>() || anchor.GetComponent<LianeAnchor>()) _hingeJoint.breakForce = breakForce;  //On change la breakforce uniquement si l'anchor est un moving anchor
         else if (_hingeJoint.breakForce != Mathf.Infinity) _hingeJoint.breakForce = 99999;  //Faire _hingJoint.breakForce = Mathf.Infinity
 
         _hingeJoint.enabled = true;
