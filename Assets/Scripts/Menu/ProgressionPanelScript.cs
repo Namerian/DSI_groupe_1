@@ -8,6 +8,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     [SerializeField]
     private float _sliderScoreGainPerSecond = 2000;
 
+    [SerializeField]
+    private List<RewardListElement> _rewardButtons;
+
     private MenuScript _menu;
 
     private CanvasGroup _canvasGroup;
@@ -18,9 +21,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
     private Text _nextLevelText;
     private Slider _levelSlider;
 
-    private Button _rewardButton1;
-    private Button _rewardButton2;
-    private Button _rewardButton3;
+    //private Button _rewardButton1;
+    //private Button _rewardButton2;
+    //private Button _rewardButton3;
 
     private bool _active = false;
     private bool _updated = false;
@@ -43,9 +46,9 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
         _nextLevelText = this.transform.Find("LevelPanel/NextLevelText").GetComponent<Text>();
         _levelSlider = this.transform.Find("LevelPanel/Slider").GetComponent<Slider>();
 
-        _rewardButton1 = this.transform.Find("RewardPanel/RewardButton1").GetComponent<Button>();
-        _rewardButton2 = this.transform.Find("RewardPanel/RewardButton2").GetComponent<Button>();
-        _rewardButton3 = this.transform.Find("RewardPanel/RewardButton3").GetComponent<Button>();
+        //_rewardButton1 = this.transform.Find("RewardPanel/RewardButton1").GetComponent<Button>();
+        //_rewardButton2 = this.transform.Find("RewardPanel/RewardButton2").GetComponent<Button>();
+        //_rewardButton3 = this.transform.Find("RewardPanel/RewardButton3").GetComponent<Button>();
 
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
@@ -208,25 +211,22 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
 
     private void UpdateRewardButtons(int currentLevel)
     {
-        if(currentLevel >= 4)
-        {
-            ColorBlock block = _rewardButton1.colors;
-            block.disabledColor = new Color(1, 1, 1, 0.9f);
-            _rewardButton1.colors = block;
-        }
+        ColorBlock block = _rewardButtons[0].button.colors;
+        block.disabledColor = new Color(1, 1, 1, 0.9f);
 
-        if(currentLevel >= 9)
+        foreach (RewardListElement element in _rewardButtons)
         {
-            ColorBlock block = _rewardButton2.colors;
-            block.disabledColor = new Color(1, 1, 1, 0.9f);
-            _rewardButton2.colors = block;
-        }
-
-        if (currentLevel >= 14)
-        {
-            ColorBlock block = _rewardButton3.colors;
-            block.disabledColor = new Color(1, 1, 1, 0.9f);
-            _rewardButton3.colors = block;
+            if(currentLevel+1 >= element.level)
+            {
+                element.button.colors = block;
+            }
         }
     }
+}
+
+[System.Serializable]
+public class RewardListElement
+{
+    public int level;
+    public Button button;
 }

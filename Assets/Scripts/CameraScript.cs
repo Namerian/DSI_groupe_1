@@ -21,7 +21,6 @@ public class CameraScript : MonoBehaviour
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
-    private int _stepIndex = -1;
     private float _acceleration;
 
     //==========================================================================================
