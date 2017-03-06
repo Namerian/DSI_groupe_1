@@ -16,12 +16,6 @@ public class RockWarningScript : MonoBehaviour
 
         float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize - 0.5f;
 
-        float halfScreenWidth = ((Camera.main.orthographicSize * 2) / Camera.main.pixelHeight) * Camera.main.pixelWidth * 0.5f;
-        float leftLimit = Camera.main.transform.position.x - halfScreenWidth + 0.5f;
-        float rightLimit = Camera.main.transform.position.x + halfScreenWidth - 0.5f;
-
-        float xPos = Mathf.Clamp(_rock.transform.position.x, leftLimit, rightLimit);
-
         this.transform.position = new Vector3(_rock.transform.position.x, yPos, 0);
     }
 
@@ -43,12 +37,6 @@ public class RockWarningScript : MonoBehaviour
         //_arrowTransform.up = (_rock.position - this.transform.position).normalized;
 
         float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize - 0.5f;
-
-        float halfScreenWidth = ((Camera.main.orthographicSize * 2) / Camera.main.pixelHeight) * Camera.main.pixelWidth * 0.5f;
-        float leftLimit = Camera.main.transform.position.x - halfScreenWidth + 0.5f;
-        float rightLimit = Camera.main.transform.position.x + halfScreenWidth - 0.5f;
-
-        float xPos = Mathf.Clamp(_rock.transform.position.x, leftLimit, rightLimit);
 
         this.transform.position = new Vector3(_rock.transform.position.x, yPos, -1);
     }
