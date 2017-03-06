@@ -219,6 +219,19 @@ public class GameManagerScript : MonoBehaviour
         return _levelExperience[level];
     }
 
+    public float GetAccelerationStep(int altitude)
+    {
+        foreach(AccelerationStepElement element in _environment.accelerationSteps)
+        {
+            if(element.height >= altitude)
+            {
+                return element.acceleration;
+            }
+        }
+
+        return 1;
+    }
+
     //==========================================================================================
     //
     //==========================================================================================
