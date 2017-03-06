@@ -69,12 +69,12 @@ public class AmplitudeHelper
 
     public void StartSession()
 	{
-		//amplitude.startSession();
+		amplitude.startSession();
 	}
 
 	public void EndSession()
 	{
-		//amplitude.endSession();
+		amplitude.endSession();
 	}
 
     //===============================================================================

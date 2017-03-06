@@ -74,19 +74,16 @@ public class GameManagerScript : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
+
             DontDestroyOnLoad(this.gameObject);
 
             TotalScore = PlayerPrefs.GetInt("TotalScore");
             BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
 
-            //Amplitude amplitude = Amplitude.Instance;
-            //amplitude.logging = true;
-            //amplitude.init("e42975312282ef47be31ec6af5cb48fc");
-            //amplitude.startSession();
-
             AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
             AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
-            AmplitudeHelper.Instance.StartSession();
+            //AmplitudeHelper.Instance.StartSession();
             AmplitudeHelper.Instance.LogEvent("Start Game");
         }
         else
@@ -115,7 +112,7 @@ public class GameManagerScript : MonoBehaviour
             //Amplitude.Instance.endSession();
 
             AmplitudeHelper.Instance.LogEvent("Exit Game");
-            AmplitudeHelper.Instance.EndSession();
+            //AmplitudeHelper.Instance.EndSession();
         }
     }
 
@@ -297,7 +294,7 @@ public class GameManagerScript : MonoBehaviour
         SessionScore = 0;
 
         //***************************
-        SceneManager.sceneLoaded += this.OnSceneLoaded;
+        
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
@@ -311,6 +308,10 @@ public class GameManagerScript : MonoBehaviour
         }
 
         TotalScore += levelScore;
+
+        //***************************
+        PlayerPrefs.SetInt("TotalScore", TotalScore);
+        PlayerPrefs.SetInt("BestSessionScore", BestSessionScore);
 
         //***************************
         PlayerCharacterScript player = GameObject.FindObjectOfType<PlayerCharacterScript>();
@@ -406,8 +407,6 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-
-        SceneManager.sceneLoaded -= this.OnSceneLoaded;
     }
 
     //==========================================================================================

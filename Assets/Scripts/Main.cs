@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Main : MonoBehaviour
+/*public class Main : MonoBehaviour
 {
 	Player player = new Player();
 
@@ -87,4 +87,4 @@ class Player
 		// Do something to start the level
 		// ...
 	}
-}
+}*/

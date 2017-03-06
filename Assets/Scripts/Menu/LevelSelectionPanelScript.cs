@@ -15,12 +15,14 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
     private Outline _char1Outline;
     private Outline _char2Outline;
     private Outline _char3Outline;
+    private CanvasGroup _loadingPanelCanvasGroup;
 
     private bool _active;
 
     void Awake()
     {
         _menu = this.transform.parent.GetComponent<MenuScript>();
+
         _canvasGroup = GetComponent<CanvasGroup>();
         _stage2Button = this.transform.Find("PanelNiveaux/ButtonLevel2").GetComponent<Button>();
         _stage3Button = this.transform.Find("PanelNiveaux/ButtonLevel3").GetComponent<Button>();
@@ -29,6 +31,7 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
         _char1Outline = this.transform.Find("PanelPersos/ButtonPoulpe").GetComponent<Outline>();
         _char2Outline = this.transform.Find("PanelPersos/ButtonChat").GetComponent<Outline>();
         _char3Outline = this.transform.Find("PanelPersos/ButtonPerso3").GetComponent<Outline>();
+        _loadingPanelCanvasGroup = this.transform.Find("PanelLoading").GetComponent<CanvasGroup>();
 
         _stage2Button.interactable = false;
         _stage3Button.interactable = false;
@@ -105,6 +108,7 @@ public class LevelSelectionPanelScript : MonoBehaviour, IMenuPanel
         GameManagerScript.Instance.DifficultyLevel = difficulty;
 
         _canvasGroup.interactable = false;
+        _loadingPanelCanvasGroup.alpha = 1;
 
         switch (difficulty)
         {
