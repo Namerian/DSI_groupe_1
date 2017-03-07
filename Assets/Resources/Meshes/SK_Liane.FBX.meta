@@ -1,33 +1,23 @@
 fileFormatVersion: 2
-guid: 978bd1ad9e792d948acf762e1db99e16
-timeCreated: 1488898867
+guid: 57e395c0e941c4c49a51af2d5fe90b7c
+timeCreated: 1488906236
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Queue
-    100002: segment1
-    100004: segment2
-    100006: segment3
+    100000: _1
+    100002: _2
+    100004: _3
+    100006: lianeMesh
     100008: //RootNode
-    100010: SnakeMesh
-    100012: Tete
-    100014: langue
-    100016: segment4
-    100018: segment5
-    400000: Queue
-    400002: segment1
-    400004: segment2
-    400006: segment3
+    400000: _1
+    400002: _2
+    400004: _3
+    400006: lianeMesh
     400008: //RootNode
-    400010: SnakeMesh
-    400012: Tete
-    400014: langue
-    400016: segment4
-    400018: segment5
-    4300000: SnakeMesh
+    4300000: lianeMesh
     9500000: //RootNode
-    13700000: SnakeMesh
+    13700000: lianeMesh
   materials:
     importMaterials: 1
     materialName: 0
