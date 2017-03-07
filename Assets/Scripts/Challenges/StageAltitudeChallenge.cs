@@ -1,16 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageAltitudeChallenge : MonoBehaviour {
+public class StageAltitudeChallenge : Challenge
+{
+    public int X { get; private set; }
+    public int Current { get; private set; }
+    public int Score { get; private set; }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public string Name { get { return "StageAltitudeChallenge"; } }
+    public bool Completed { get { return Current >= X; } }
+    public string Description { get { return ""; } }
+
+    public StageAltitudeChallenge(int x, int score)
+    {
+        X = x;
+        Current = 0;
+        Score = score;
+
+        EventManager.Instance.OnStageEndedEvent += OnStageEndedEvent;
+    }
+
+    private void OnStageEndedEvent(int altitude, string character)
+    {
+        if (altitude > Current && !Completed)
+        {
+            Current = altitude;
+        }
+    }
 }
