@@ -30,14 +30,14 @@ public class ChunkManager : MonoBehaviour
     [SerializeField]
     private float _chunkSpawnOffsetInterval = 0.2f;
 
-    [SerializeField]
-    private float _minRockSpawnTimer = 2f;
+    /*[SerializeField]
+    private float _minRockSpawnTimer = 2f;*/
 
-    [SerializeField]
-    private float _maxRockRespawnTimer = 6f;
+    /*[SerializeField]
+    private float _maxRockRespawnTimer = 6f;*/
 
-    [SerializeField]
-    private float _rockSpawnOffset = 6f;
+    /*[SerializeField]
+    private float _rockSpawnOffset = 6f;*/
 
     //======================================================
     //
@@ -54,6 +54,8 @@ public class ChunkManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        _chunkPrefabs.AddRange(GameManagerScript.Instance.EnvironmentChunks);
+
         _chunks.Add(_startChunk.GetComponent<ChunkScript>());
 
         GameObject newBackground = Instantiate<GameObject>(_backgroundPrefab, this.transform);
@@ -80,7 +82,7 @@ public class ChunkManager : MonoBehaviour
             possibleChunkXPos -= _chunkSpawnOffsetInterval;
         }
 
-        Invoke("SpawnRock", Random.Range(_minRockSpawnTimer, _maxRockRespawnTimer));
+        Invoke("SpawnRock", Random.Range(GameManagerScript.Instance.MinRockSpawnTimer, GameManagerScript.Instance.MaxRockSpawnTimer));
     }
 
     //======================================================
@@ -162,7 +164,7 @@ public class ChunkManager : MonoBehaviour
     {
         float halfScreenWidth = ((Camera.main.orthographicSize * 2) / Camera.main.pixelHeight) * Camera.main.pixelWidth * 0.5f;
 
-        float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize + _rockSpawnOffset;
+        float yPos = Camera.main.transform.position.y + Camera.main.orthographicSize + GameManagerScript.Instance.RockSpawnOffset;
         float xPos = Random.Range(Camera.main.transform.position.x-halfScreenWidth, Camera.main.transform.position.x+halfScreenWidth);
 
         //Debug.Log("Spawning Rock, xPos=" + xPos);
@@ -173,6 +175,6 @@ public class ChunkManager : MonoBehaviour
         GameObject warning = Instantiate(_warningPrefab, this.transform);
         warning.GetComponent<RockWarningScript>().Initialize(rock.transform);
 
-        Invoke("SpawnRock", Random.Range(_minRockSpawnTimer, _maxRockRespawnTimer));
+        Invoke("SpawnRock", Random.Range(GameManagerScript.Instance.MinRockSpawnTimer, GameManagerScript.Instance.MaxRockSpawnTimer));
     }
 }

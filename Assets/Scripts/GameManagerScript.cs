@@ -28,6 +28,8 @@ public class GameManagerScript : MonoBehaviour
     //
     //==========================================================================================
 
+    
+
     [SerializeField]
     private List<CharacterListElement> _characterPrefabs;
 
@@ -125,6 +127,14 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public float MinRockSpawnTimer { get { return _environment.minRockSpawnTimer; } }
+
+    public float MaxRockSpawnTimer { get { return _environment.maxRockSpawnTimer; } }
+
+    public float RockSpawnOffset { get { return _environment.rockSpawnOffset; } }
+
+    public List<GameObject> EnvironmentChunks { get { return _environment.uniqueChunks; } }
+
     public Color BackgroundColour { get { return _environment.backgroundColour; } }
 
     public GameObject AmbianceBackground { get { return _environment.ambiancePrefab; } }
@@ -165,9 +175,9 @@ public class GameManagerScript : MonoBehaviour
             BestSessionScore = levelScore;
         }
 
-        int oldLevel = ComputeLevel(TotalScore)+1;
+        int oldLevel = ComputeLevel(TotalScore) + 1;
         TotalScore += levelScore;
-        int newLevel = ComputeLevel(TotalScore)+1;
+        int newLevel = ComputeLevel(TotalScore) + 1;
 
         if (newLevel > oldLevel && newLevel % 5 == 0)
         {
@@ -285,7 +295,7 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
-        else if(scene.name == "Menu")
+        else if (scene.name == "Menu")
         {
             Instantiate(Resources.Load("Prefabs/MenuCanvas"));
         }
@@ -329,6 +339,7 @@ public class EnvironmentInfo
     public float scoreMultiplier;
     public float minRockSpawnTimer;
     public float maxRockSpawnTimer;
+    public float rockSpawnOffset;
     public Color backgroundColour;
     public GameObject ambiancePrefab;
     public Color crevasseColour;
