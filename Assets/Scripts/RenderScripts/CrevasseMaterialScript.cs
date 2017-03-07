@@ -8,9 +8,11 @@ public class CrevasseMaterialScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        Color color = GameManagerScript.Instance.CrevasseColor;
+        Renderer rend = GetComponent<Renderer>();
+        rend.material.SetVector("_Color", GameManagerScript.Instance.CrevasseColor);
+        //SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        //Color color = GameManagerScript.Instance.CrevasseColor;
 
-        renderer.color = color;
+        //renderer.color = color;
     }
 }
