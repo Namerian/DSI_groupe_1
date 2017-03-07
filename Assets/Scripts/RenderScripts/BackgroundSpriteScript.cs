@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackgroundColourScript : MonoBehaviour
+public class BackgroundSpriteScript : MonoBehaviour
 {
 
     // Use this for initialization
     void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        Color colour = GameManagerScript.Instance.BackgroundColour;
+        Sprite sprite = GameManagerScript.Instance.BackgroundSprite;
 
-        renderer.color = colour;
+        renderer.sprite = sprite;
     }
 }
