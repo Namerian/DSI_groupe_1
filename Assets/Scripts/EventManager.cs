@@ -8,12 +8,12 @@ public delegate void OnMoonstoneCollectedDelegate ();
 
 public class EventManager
 {
-	private static Event _instance;
+	private static EventManager _instance;
 
-	public static Event Instance {
+	public static EventManager Instance {
 		get {
 			if (_instance == null) {
-				_instance = new Event ();
+				_instance = new EventManager ();
 			}
 
 			return _instance;
