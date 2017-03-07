@@ -189,6 +189,11 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
         _menu.SwitchPanel(_menu.LevelSelectionPanel);
     }
 
+    public void ShowStory(GameObject toShow)
+    {
+        toShow.SetActive(true);
+    }
+
     //==========================================================================================
     //
     //==========================================================================================
