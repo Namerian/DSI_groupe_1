@@ -285,6 +285,10 @@ public class GameManagerScript : MonoBehaviour
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
         }
+        else if(scene.name == "Menu")
+        {
+            Instantiate(Resources.Load("Prefabs/MenuCanvas"));
+        }
     }
 
     //==========================================================================================

@@ -32,7 +32,6 @@ public class PlayerCharacterScript : MonoBehaviour
     private ExtremityScript _draggedExtremity;
     private float _levitationTimer;
 
-    private UIManager _uiManager;
     private int _numOfAnchoredExtremities;
 
     private Transform _body;
@@ -62,7 +61,6 @@ public class PlayerCharacterScript : MonoBehaviour
     {
         _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
         //Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
-        _uiManager = FindObjectOfType<UIManager>();
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
     }
@@ -73,33 +71,6 @@ public class PlayerCharacterScript : MonoBehaviour
 
     void Update()
     {
-        _numOfAnchoredExtremities = 0;
-        foreach (ExtremityScript extremity in _extremitiesList)
-        {
-            if (extremity.IsAnchored)
-            {
-                _numOfAnchoredExtremities++;
-            }
-        }
-
-        _uiManager.UpdateCombo(_numOfAnchoredExtremities);
-        //Debug.Log(numOfAnchoredExtremitiesTest);
-
-        _altitude = _body.position.y - _originalYpos;
-        _uiManager.UpdateAltitude(_altitude);
-
-        if(_altitude > _highestAltitude)
-        {
-            _highestAltitude = _altitude;
-        }
-    }
-
-    //========================================================
-    //
-    //========================================================
-
-    void FixedUpdate()
-    {
         if (_isDead)
         {
             return;
@@ -109,7 +80,7 @@ public class PlayerCharacterScript : MonoBehaviour
         // DEATH
 
         bool isDead = true;
-        float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize - 1;
+        float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize;
 
         foreach (ExtremityScript extremity in _extremitiesList)
         {
@@ -127,6 +98,37 @@ public class PlayerCharacterScript : MonoBehaviour
             _isDead = true;
 
             Invoke("ReloadScene", 0.5f);
+        }
+
+        //******************************************************
+        // updating score and altitude
+
+        _numOfAnchoredExtremities = 0;
+        foreach (ExtremityScript extremity in _extremitiesList)
+        {
+            if (extremity.IsAnchored)
+            {
+                _numOfAnchoredExtremities++;
+            }
+        }
+
+        UIManager.Instance.UpdateCombo(_numOfAnchoredExtremities);
+
+        _altitude = _body.position.y - _originalYpos;
+        UIManager.Instance.UpdateAltitude(_altitude);
+
+        if (_altitude > _highestAltitude)
+        {
+            _highestAltitude = _altitude;
+        }
+    }
+
+    // The code for moving the extremities is in the fixedUpdate method because the unity manual recommends using for moving rigidbodies
+    void FixedUpdate()
+    {
+        if (_isDead)
+        {
+            return;
         }
 
         //******************************************************
@@ -230,7 +232,7 @@ public class PlayerCharacterScript : MonoBehaviour
                             if (!anchorScript.usedOnce)
                             {
                                 anchorScript.usedOnce = true;
-                                _uiManager.AddScore(_grabScoreBonus);
+                                UIManager.Instance.AddScore(_grabScoreBonus);
                             }
 
                             break;
