@@ -12,6 +12,7 @@ public class ExtremityScript : MonoBehaviour
 
     private bool _isMoving; //wether the extremity is being dragged, used to show the ui circle
     private GameObject _helpCircle; //the ui circle that is shown when the extremity is being dragged
+    private GameObject _helpCircle2;
 
     private AbstractAnchorScript _anchor; //the anchor this extremity is anchored to
 
@@ -28,6 +29,7 @@ public class ExtremityScript : MonoBehaviour
             {
                 _helpCircle = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_GrabHelper"));
                 _helpCircle.transform.parent = this.transform;
+                _helpCircle2 = _helpCircle.transform.Find("P_GrabHelper2").gameObject;
 
                 Vector3 pos = this.transform.position;
                 //pos.z = -1;
@@ -81,6 +83,10 @@ public class ExtremityScript : MonoBehaviour
             _hingeJoint.enabled = false;
             IsAnchored = false;
         }
+        else if(_hingeJoint == null && IsAnchored)
+        {
+            IsAnchored = false;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -94,9 +100,21 @@ public class ExtremityScript : MonoBehaviour
             GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_TakeItem"));
             fx.transform.position = other.transform.position;
 
-            other.gameObject.SetActive(false);
-            //Destroy(other.gameObject);
-        } 
+            //other.gameObject.SetActive(false);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Anchor"))
+        {
+            _helpCircle2.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Anchor"))
+        {
+            _helpCircle2.SetActive(false);
+        }
     }
 
     //==========================================================================================
