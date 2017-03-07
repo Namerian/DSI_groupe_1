@@ -39,6 +39,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private List<int> _levelExperience;
 
+    [SerializeField]
+    private List<ChallengeInfo> _challengeList;
+
     //==========================================================================================
     //
     //==========================================================================================
@@ -301,14 +304,57 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    //==========================================================================================
-    //
-    //==========================================================================================
-
     void FillTrackingProperties(Dictionary<string, object> properties)
     {
         properties["Total Score"] = TotalScore;
         properties["Best Session Score"] = BestSessionScore;
+    }
+
+    private void LoadChallenge()
+    {
+        string challengeName = PlayerPrefs.GetString("ChallengeName");
+
+        if(challengeName == "")
+        {
+            CreateChallenge();
+            return;
+        }
+
+        int x = PlayerPrefs.GetInt("ChallengeX");
+        int current = PlayerPrefs.GetInt("ChallengeCurrent");
+        int score = PlayerPrefs.GetInt("ChallengeScore");
+    }
+
+    private void CreateChallenge()
+    {
+        ChallengeInfo challengeInfo = _challengeList[Random.Range(0, _challengeList.Count - 1)];
+        int x = Random.Range(challengeInfo.minXValue, challengeInfo.maxXValue);
+        int score = (int)(x * challengeInfo.multiplier);
+
+        switch (challengeInfo.name)
+        {
+            case "ForeverAltitudeChallenge":
+                break;
+            case "ForeverAnchorChallenge":
+                break;
+            case "ForeverMoonstoneChallenge":
+                break;
+            case "StageAltitudeChallenge":
+                break;
+            case "StageAnchorChallenge":
+                break;
+            case "StageMoonstoneChallenge":
+                break;
+            case "CharacterChallenge":
+                break;
+            case "RockChallenge":
+                break;
+        }
+
+        PlayerPrefs.SetString("ChallengeName", challengeInfo.name);
+        PlayerPrefs.SetInt("ChallengeX", x);
+        PlayerPrefs.SetInt("ChallengeCUrrent", 0);
+        PlayerPrefs.SetInt("ChallengeScore", score);
     }
 }
 
@@ -348,4 +394,13 @@ public class EnvironmentInfo
     public Material anchorMaterial;
     public Sprite plantSprite;
     public Sprite uiImage;
+}
+
+[System.Serializable]
+public class ChallengeInfo
+{
+    public string name;
+    public int minXValue;
+    public int maxXValue;
+    public float multiplier;
 }
