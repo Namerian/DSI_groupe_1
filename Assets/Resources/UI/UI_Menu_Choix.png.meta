@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5c3cf8d11b4a70a419270c6cd4b37bf1
-timeCreated: 1488633028
+timeCreated: 1488899095
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -18,6 +18,10 @@ TextureImporter:
     21300022: UI_Menu_Choix_18
     21300024: UI_Menu_Choix_19
     21300026: UI_Menu_Choix_20
+    21300028: UI_Menu_Choix_0
+    21300030: UI_Menu_Choix_4
+    21300032: UI_Menu_Choix_5
+    21300034: UI_Menu_Choix_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -120,9 +124,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 198
-        y: 1879
+        y: 1890
         width: 137
-        height: 289
+        height: 278
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,9 +162,9 @@ TextureImporter:
       name: UI_Menu_Choix_10
       rect:
         serializedVersion: 2
-        x: 272
+        x: 319
         y: 1322
-        width: 625
+        width: 578
         height: 62
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -171,10 +175,10 @@ TextureImporter:
       name: UI_Menu_Choix_11
       rect:
         serializedVersion: 2
-        x: 271
-        y: 1214
-        width: 626
-        height: 61
+        x: 320
+        y: 1223
+        width: 577
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,9 +188,9 @@ TextureImporter:
       name: UI_Menu_Choix_12
       rect:
         serializedVersion: 2
-        x: 265
+        x: 320
         y: 1122
-        width: 625
+        width: 570
         height: 62
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -262,9 +266,9 @@ TextureImporter:
       name: UI_Menu_Choix_18
       rect:
         serializedVersion: 2
-        x: 323
+        x: 343
         y: 575
-        width: 576
+        width: 556
         height: 67
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -292,6 +296,58 @@ TextureImporter:
         y: 169
         width: 348
         height: 348
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_Menu_Choix_0
+      rect:
+        serializedVersion: 2
+        x: 1264
+        y: 1719
+        width: 575
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_Menu_Choix_4
+      rect:
+        serializedVersion: 2
+        x: 1265
+        y: 1620
+        width: 571
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_Menu_Choix_5
+      rect:
+        serializedVersion: 2
+        x: 1265
+        y: 1878
+        width: 211
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_Menu_Choix_6
+      rect:
+        serializedVersion: 2
+        x: 1542
+        y: 1878
+        width: 207
+        height: 325
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
