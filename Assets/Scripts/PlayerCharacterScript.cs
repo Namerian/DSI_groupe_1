@@ -76,21 +76,26 @@ public class PlayerCharacterScript : MonoBehaviour
             return;
         }
 
-        //******************************************************
-        // DEATH
+        // DEATH, updating score and altitude
 
         bool isDead = true;
         float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize;
+        _numOfAnchoredExtremities = 0;
 
         foreach (ExtremityScript extremity in _extremitiesList)
         {
             if (extremity.transform.position.y >= deathPos)
             {
                 isDead = false;
-                break;
+            }
+
+            if (extremity.IsAnchored)
+            {
+                _numOfAnchoredExtremities++;
             }
         }
 
+        //******************************************
         if (isDead)
         {
             Debug.Log("Player Died!");
@@ -98,20 +103,31 @@ public class PlayerCharacterScript : MonoBehaviour
             _isDead = true;
 
             Invoke("ReloadScene", 0.5f);
+            return;
         }
 
-        //******************************************************
-        // updating score and altitude
-
-        _numOfAnchoredExtremities = 0;
-        foreach (ExtremityScript extremity in _extremitiesList)
+        //******************************************
+        if (_numOfAnchoredExtremities == 0)
         {
-            if (extremity.IsAnchored)
-            {
-                _numOfAnchoredExtremities++;
-            }
+            _levitationTimer += Time.fixedDeltaTime;
         }
 
+        if (_levitationTimer > 1f)
+        {
+            if (_isDragging)
+            {
+                _draggedExtremity.IsMoving = false;
+                _draggedExtremity = null;
+
+                _isDragging = false;
+            }
+            
+            _anchoringAllowed = false;
+
+            Invoke("AllowAnchoring", 0.5f);
+        }
+
+        //******************************************
         UIManager.Instance.UpdateCombo(_numOfAnchoredExtremities);
 
         _altitude = _body.position.y - _originalYpos;
@@ -138,22 +154,8 @@ public class PlayerCharacterScript : MonoBehaviour
         {
             //**********************
             // mouse down AND dragging
-            if (_isDragging)
+            if (_isDragging /*&& _anchoringAllowed*/)
             {
-                int numOfAnchoredExtremities = 0;
-                foreach (ExtremityScript extremity in _extremitiesList)
-                {
-                    if (extremity.IsAnchored)
-                    {
-                        numOfAnchoredExtremities++;
-                    }
-                }
-
-                if (numOfAnchoredExtremities == 0)
-                {
-                    _levitationTimer += Time.fixedDeltaTime;
-                }
-
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
@@ -165,20 +167,13 @@ public class PlayerCharacterScript : MonoBehaviour
                 }
 
                 _draggedExtremity.GetComponent<Rigidbody2D>().AddForce(force * _draggingMultiplyer);
-
-                if (_levitationTimer > 1f)
-                {
-                    _draggedExtremity.IsMoving = false;
-                    _draggedExtremity = null;
-
-                    _isDragging = false;
-                }
             }
             //**********************
             // mouse down AND NOT dragging
             else
             {
-                Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                //Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.2f);
 
                 if (colliders != null)
                 {
@@ -195,9 +190,8 @@ public class PlayerCharacterScript : MonoBehaviour
 
                             _isDragging = true;
                             _anchoringAllowed = false;
-                            _levitationTimer = 0f;
 
-                            Invoke("AllowAnchoring", 0.3f);
+                            Invoke("AllowAnchoring", 0.1f);
 
                             break;
                         }
@@ -234,6 +228,8 @@ public class PlayerCharacterScript : MonoBehaviour
                                 anchorScript.usedOnce = true;
                                 UIManager.Instance.AddScore(_grabScoreBonus);
                             }
+
+                            _levitationTimer = 0;
 
                             break;
                         }
