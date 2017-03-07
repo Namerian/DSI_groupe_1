@@ -169,17 +169,17 @@ public class GameManagerScript : MonoBehaviour
         SceneManager.LoadSceneAsync("Scenes/TestLevel");
     }
 
-    public void LoadMenu(int levelScore)
+    public void LoadMenu()
     {
-        SessionScore = levelScore;
+        SessionScore = (int)UIManager.Instance.Score;
 
-        if (levelScore > BestSessionScore)
+        if (SessionScore > BestSessionScore)
         {
-            BestSessionScore = levelScore;
+            BestSessionScore = SessionScore;
         }
 
         int oldLevel = ComputeLevel(TotalScore) + 1;
-        TotalScore += levelScore;
+        TotalScore += SessionScore;
         int newLevel = ComputeLevel(TotalScore) + 1;
 
         if (newLevel > oldLevel && newLevel % 5 == 0)

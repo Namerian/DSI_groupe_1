@@ -31,12 +31,18 @@ public class UIManager : MonoBehaviour
 
     public Text scoreText, comboText, addScoreText, altitudeText;
     public Transform faster;
-    public float score;
+    private float _score;
     public int combo;
     public Color[] comboColors;
 
     [SerializeField]
     private float _scoreInterval = 0.1f;
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    public float Score { get { return _score; } }
 
     //==========================================================================================
     //
@@ -64,17 +70,12 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        UpdateScoreText();
+        scoreText.text = ((int)_score).ToString();
     }
 
     //==========================================================================================
     //
     //==========================================================================================
-
-    public void UpdateScoreText()
-    {
-        scoreText.text = ((int)score).ToString();
-    }
 
     public void UpdateCombo(int comb)
     {
@@ -108,27 +109,35 @@ public class UIManager : MonoBehaviour
         fasterSequence.Append(faster.DOScaleY(0f, 0.2f));
     }
 
-    public void AddScore(int scoreToAdd)
+    public void AddScore(float scoreToAdd)
     {
         StopCoroutine(AddScoreCoroutine(scoreToAdd));
         StartCoroutine(AddScoreCoroutine(scoreToAdd));
     }
 
-    IEnumerator AddScoreCoroutine(int scoreToAdd)
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    private IEnumerator AddScoreCoroutine(float scoreToAdd)
     {
-        addScoreText.text = "+" + scoreToAdd;
+        scoreToAdd *= GameManagerScript.Instance.ScoreMultiplier;
+        _score += scoreToAdd;
+
+        addScoreText.text = "+" + (int)scoreToAdd;
         addScoreText.transform.DOScaleY(1f, 0.1f);
         yield return null;
+
         addScoreText.transform.DOScaleY(0.5f, 0.5f);
-        score += scoreToAdd * GameManagerScript.Instance.ScoreMultiplier;
         yield return new WaitForSeconds(1);
+
         addScoreText.transform.DOScaleY(0, 0.5f);
         yield return new WaitForSeconds(0.5f);
     }
 
     private void UpdateScore()
     {
-        score += combo * GameManagerScript.Instance.ScoreMultiplier;
+        _score += combo * GameManagerScript.Instance.ScoreMultiplier;
 
         Invoke("UpdateScore", _scoreInterval);
     }
