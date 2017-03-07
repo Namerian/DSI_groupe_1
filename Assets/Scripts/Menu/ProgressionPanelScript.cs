@@ -224,6 +224,11 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             if(currentLevel+1 >= element.level)
             {
                 element.button.colors = block;
+                element.button.interactable = true;
+            }
+            else
+            {
+                element.button.interactable = false;
             }
         }
     }
