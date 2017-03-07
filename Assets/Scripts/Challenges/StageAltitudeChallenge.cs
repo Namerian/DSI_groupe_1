@@ -13,10 +13,10 @@ public class StageAltitudeChallenge : Challenge
     public bool Completed { get { return Current >= X; } }
     public string Description { get { return ""; } }
 
-    public StageAltitudeChallenge(int x, int score)
+    public StageAltitudeChallenge(int x, int score, int current = 0)
     {
         X = x;
-        Current = 0;
+        Current = current;
         Score = score;
 
         EventManager.Instance.OnStageEndedEvent += OnStageEndedEvent;

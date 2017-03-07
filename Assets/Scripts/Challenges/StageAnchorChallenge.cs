@@ -8,16 +8,14 @@ public class StageAnchorChallenge : Challenge
     public int Current { get; private set; }
     public int Score { get; private set; }
 
-    public string Name { get { return "StageAltitudeChallenge"; } }
+    public string Name { get { return "StageAnchorChallenge"; } }
     public bool Completed { get { return Current >= X; } }
     public string Description { get { return ""; } }
 
-    private bool _active;
-
-    public StageAnchorChallenge(int x, int score)
+    public StageAnchorChallenge(int x, int score, int current = 0)
     {
         X = x;
-        Current = 0;
+        Current = current;
         Score = score;
 
         EventManager.Instance.OnStageStartedEvent += OnStageStartedEvent;
@@ -26,11 +24,17 @@ public class StageAnchorChallenge : Challenge
 
     private void OnAnchorGrabbedEvent()
     {
-        Current++;
+        if (!Completed)
+        {
+            Current++;
+        }
     }
 
     private void OnStageStartedEvent()
     {
-        Current = 0;
+        if (!Completed)
+        {
+            Current = 0;
+        }
     }
 }

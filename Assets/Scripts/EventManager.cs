@@ -5,6 +5,7 @@ public delegate void OnStageStartedDelegate ();
 public delegate void OnStageEndedDelegate (int altitude, string character);
 public delegate void OnAnchorGrabbedDelegate ();
 public delegate void OnMoonstoneCollectedDelegate ();
+public delegate void OnRockCollisionDelegate();
 
 public class EventManager
 {
@@ -28,6 +29,7 @@ public class EventManager
 	public event OnStageEndedDelegate OnStageEndedEvent;
 	public event OnAnchorGrabbedDelegate OnAnchorGrabbedEvent;
 	public event OnMoonstoneCollectedDelegate OnMoonstoneCollectedEvent;
+    public event OnRockCollisionDelegate OnRockCollisionEvent;
 
 	//==================================================================================
 	//
@@ -68,4 +70,14 @@ public class EventManager
 			this.OnMoonstoneCollectedEvent ();
 		}
 	}
+
+    public void SendOnRockCollisionEvent()
+    {
+        OnRockCollisionDelegate tmp = OnRockCollisionEvent;
+
+        if(tmp != null)
+        {
+            this.OnRockCollisionEvent();
+        }
+    }
 }
