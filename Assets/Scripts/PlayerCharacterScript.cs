@@ -172,7 +172,8 @@ public class PlayerCharacterScript : MonoBehaviour
             // mouse down AND NOT dragging
             else
             {
-                Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                //Collider2D[] colliders = Physics2D.OverlapPointAll(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.2f);
 
                 if (colliders != null)
                 {

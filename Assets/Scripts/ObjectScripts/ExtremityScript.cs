@@ -103,7 +103,7 @@ public class ExtremityScript : MonoBehaviour
             //other.gameObject.SetActive(false);
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Anchor"))
+        else if (other.CompareTag("Anchor") && IsMoving)
         {
             _helpCircle2.SetActive(true);
         }
@@ -111,7 +111,7 @@ public class ExtremityScript : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Anchor"))
+        if (other.CompareTag("Anchor") && IsMoving)
         {
             _helpCircle2.SetActive(false);
         }
