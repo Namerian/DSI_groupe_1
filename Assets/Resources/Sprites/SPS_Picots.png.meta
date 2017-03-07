@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 3acbb485eca1b9545951a994e53015b9
-timeCreated: 1488581406
+timeCreated: 1488877919
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -84,10 +84,10 @@ TextureImporter:
       name: SPS_Picots_0
       rect:
         serializedVersion: 2
-        x: 164
-        y: 5
-        width: 159
-        height: 542
+        x: 165
+        y: 7
+        width: 158
+        height: 790
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -98,9 +98,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 635
-        y: 5
+        y: 7
         width: 226
-        height: 542
+        height: 790
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,9 +111,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1194
-        y: 45
+        y: 65
         width: 158
-        height: 501
+        height: 732
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
