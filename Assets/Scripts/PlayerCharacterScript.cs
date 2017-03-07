@@ -32,7 +32,6 @@ public class PlayerCharacterScript : MonoBehaviour
     private ExtremityScript _draggedExtremity;
     private float _levitationTimer;
 
-    private UIManager _uiManager;
     private int _numOfAnchoredExtremities;
 
     private Transform _body;
@@ -62,7 +61,6 @@ public class PlayerCharacterScript : MonoBehaviour
     {
         _extremitiesList = new List<ExtremityScript>(this.transform.GetComponentsInChildren<ExtremityScript>());
         //Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
-        _uiManager = FindObjectOfType<UIManager>();
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
     }
@@ -73,53 +71,31 @@ public class PlayerCharacterScript : MonoBehaviour
 
     void Update()
     {
-        _numOfAnchoredExtremities = 0;
-        foreach (ExtremityScript extremity in _extremitiesList)
-        {
-            if (extremity.IsAnchored)
-            {
-                _numOfAnchoredExtremities++;
-            }
-        }
-
-        _uiManager.UpdateCombo(_numOfAnchoredExtremities);
-        //Debug.Log(numOfAnchoredExtremitiesTest);
-
-        _altitude = _body.position.y - _originalYpos;
-        _uiManager.UpdateAltitude(_altitude);
-
-        if(_altitude > _highestAltitude)
-        {
-            _highestAltitude = _altitude;
-        }
-    }
-
-    //========================================================
-    //
-    //========================================================
-
-    void FixedUpdate()
-    {
         if (_isDead)
         {
             return;
         }
 
-        //******************************************************
-        // DEATH
+        // DEATH, updating score and altitude
 
         bool isDead = true;
-        float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize - 1;
+        float deathPos = Camera.main.transform.position.y - Camera.main.orthographicSize;
+        _numOfAnchoredExtremities = 0;
 
         foreach (ExtremityScript extremity in _extremitiesList)
         {
             if (extremity.transform.position.y >= deathPos)
             {
                 isDead = false;
-                break;
+            }
+
+            if (extremity.IsAnchored)
+            {
+                _numOfAnchoredExtremities++;
             }
         }
 
+        //******************************************
         if (isDead)
         {
             Debug.Log("Player Died!");
@@ -127,6 +103,48 @@ public class PlayerCharacterScript : MonoBehaviour
             _isDead = true;
 
             Invoke("ReloadScene", 0.5f);
+            return;
+        }
+
+        //******************************************
+        if (_numOfAnchoredExtremities == 0)
+        {
+            _levitationTimer += Time.fixedDeltaTime;
+        }
+
+        if (_levitationTimer > 1f)
+        {
+            if (_isDragging)
+            {
+                _draggedExtremity.IsMoving = false;
+                _draggedExtremity = null;
+
+                _isDragging = false;
+            }
+            
+            _anchoringAllowed = false;
+
+            Invoke("AllowAnchoring", 0.5f);
+        }
+
+        //******************************************
+        UIManager.Instance.UpdateCombo(_numOfAnchoredExtremities);
+
+        _altitude = _body.position.y - _originalYpos;
+        UIManager.Instance.UpdateAltitude(_altitude);
+
+        if (_altitude > _highestAltitude)
+        {
+            _highestAltitude = _altitude;
+        }
+    }
+
+    // The code for moving the extremities is in the fixedUpdate method because the unity manual recommends using for moving rigidbodies
+    void FixedUpdate()
+    {
+        if (_isDead)
+        {
+            return;
         }
 
         //******************************************************
@@ -136,22 +154,8 @@ public class PlayerCharacterScript : MonoBehaviour
         {
             //**********************
             // mouse down AND dragging
-            if (_isDragging)
+            if (_isDragging /*&& _anchoringAllowed*/)
             {
-                int numOfAnchoredExtremities = 0;
-                foreach (ExtremityScript extremity in _extremitiesList)
-                {
-                    if (extremity.IsAnchored)
-                    {
-                        numOfAnchoredExtremities++;
-                    }
-                }
-
-                if (numOfAnchoredExtremities == 0)
-                {
-                    _levitationTimer += Time.fixedDeltaTime;
-                }
-
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0;
 
@@ -163,14 +167,6 @@ public class PlayerCharacterScript : MonoBehaviour
                 }
 
                 _draggedExtremity.GetComponent<Rigidbody2D>().AddForce(force * _draggingMultiplyer);
-
-                if (_levitationTimer > 1f)
-                {
-                    _draggedExtremity.IsMoving = false;
-                    _draggedExtremity = null;
-
-                    _isDragging = false;
-                }
             }
             //**********************
             // mouse down AND NOT dragging
@@ -193,9 +189,8 @@ public class PlayerCharacterScript : MonoBehaviour
 
                             _isDragging = true;
                             _anchoringAllowed = false;
-                            _levitationTimer = 0f;
 
-                            Invoke("AllowAnchoring", 0.3f);
+                            Invoke("AllowAnchoring", 0.1f);
 
                             break;
                         }
@@ -230,8 +225,10 @@ public class PlayerCharacterScript : MonoBehaviour
                             if (!anchorScript.usedOnce)
                             {
                                 anchorScript.usedOnce = true;
-                                _uiManager.AddScore(_grabScoreBonus);
+                                UIManager.Instance.AddScore(_grabScoreBonus);
                             }
+
+                            _levitationTimer = 0;
 
                             break;
                         }

@@ -8,16 +8,9 @@ public class CameraScript : MonoBehaviour
     // editable variables
     //==========================================================================================
 
-    [Header("index=difficulty, y=baseSpeed")]
     [SerializeField]
-    private List<float> _baseSpeeds;
+    private float _baseSpeed = 0.3f;
 
-    [Space(10)]
-    [Header("x=altitude, y=speedMultiplier")]
-    [SerializeField]
-    private List<Vector2> _accelerationSteps;
-
-    [Space(10)]
     [SerializeField]
     private float _maxHorizontalOffset = 2f;
 
@@ -28,8 +21,7 @@ public class CameraScript : MonoBehaviour
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
-    private float _scrollSpeed = 0.3f;
-    private int _stepIndex = -1;
+    private float _acceleration;
 
     //==========================================================================================
     // monobehaviour methods
@@ -41,10 +33,7 @@ public class CameraScript : MonoBehaviour
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
 
-        if(GameManagerScript.Instance != null)
-        {
-            _scrollSpeed = _baseSpeeds[GameManagerScript.Instance.DifficultyLevel];
-        }
+        _acceleration = 1;
     }
 
     // Update is called once per frame
@@ -55,21 +44,18 @@ public class CameraScript : MonoBehaviour
         //*****************************************
         // normal vertical movement
 
-        float baseSpeed = _scrollSpeed * Time.fixedDeltaTime;
+        float baseSpeed = _baseSpeed * Time.fixedDeltaTime;
 
-        for (int i = _accelerationSteps.Count; i-- > 0;)
+        float acceleration = GameManagerScript.Instance.GetAccelerationStep((int)_playerScript.Altitude);
+
+        if (acceleration > _acceleration)
         {
-            if (_playerScript.Altitude >= _accelerationSteps[i].x)
-            {
-                if(_stepIndex < i)
-                {
-                    _stepIndex = i;
-                    UIManager.Instance.Faster();
-                }
-                baseSpeed *= _accelerationSteps[i].y;
-                break;
-            }
+            //Debug.Log("current acc = " + _acceleration + "; new acc = " + acceleration);
+            _acceleration = acceleration;
+            UIManager.Instance.Faster();
         }
+
+        baseSpeed *= _acceleration;
 
         cameraTranslation.y += baseSpeed;
 
@@ -81,7 +67,7 @@ public class CameraScript : MonoBehaviour
 
         if (playerYPos > speedUpLimit)
         {
-            cameraTranslation.y += ((playerYPos - speedUpLimit) / Camera.main.orthographicSize) * _scrollSpeed * 5 * Time.fixedDeltaTime;
+            cameraTranslation.y += ((playerYPos - speedUpLimit) / (Camera.main.orthographicSize * 0.5f)) * _baseSpeed * 5 * Time.fixedDeltaTime;
         }
 
         //*****************************************
