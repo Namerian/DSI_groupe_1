@@ -12,7 +12,7 @@ public class ExtremityScript : MonoBehaviour
 
     private bool _isMoving; //wether the extremity is being dragged, used to show the ui circle
     private GameObject _helpCircle; //the ui circle that is shown when the extremity is being dragged
-    private ParticleSystem _helpParticleSystem;
+    private GameObject _helpCircle2;
 
     private AbstractAnchorScript _anchor; //the anchor this extremity is anchored to
 
@@ -29,7 +29,7 @@ public class ExtremityScript : MonoBehaviour
             {
                 _helpCircle = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_GrabHelper"));
                 _helpCircle.transform.parent = this.transform;
-                _helpParticleSystem = _helpCircle.GetComponent<ParticleSystem>();
+                _helpCircle2 = _helpCircle.transform.Find("P_GrabHelper2").gameObject;
 
                 Vector3 pos = this.transform.position;
                 //pos.z = -1;
@@ -103,20 +103,18 @@ public class ExtremityScript : MonoBehaviour
             //other.gameObject.SetActive(false);
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Anchor") && IsMoving)
+        else if (other.CompareTag("Anchor"))
         {
-            
-
-            //_helpParticleSystem.startColor = Color.red;
+            _helpCircle2.SetActive(true);
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        /*if (other.CompareTag("Anchor") && IsMoving)
+        if (other.CompareTag("Anchor"))
         {
-            _helpParticleSystem.startColor = Color.white;
-        }*/
+            _helpCircle2.SetActive(false);
+        }
     }
 
     //==========================================================================================
