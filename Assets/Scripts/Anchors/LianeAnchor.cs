@@ -17,6 +17,9 @@ public class LianeAnchor : AbstractAnchorScript
 
     public override void Respawn()
     {
+        GameObject go = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/Anchors/LianeAnchor"), this.transform.parent.parent);
+        go.transform.position = this.transform.parent.position;
 
+        Destroy(this.transform.parent.gameObject);
     }
 }

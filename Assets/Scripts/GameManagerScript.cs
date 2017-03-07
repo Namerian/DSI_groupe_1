@@ -28,6 +28,8 @@ public class GameManagerScript : MonoBehaviour
     //
     //==========================================================================================
 
+    
+
     [SerializeField]
     private List<CharacterListElement> _characterPrefabs;
 
