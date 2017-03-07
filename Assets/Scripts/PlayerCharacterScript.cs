@@ -63,6 +63,8 @@ public class PlayerCharacterScript : MonoBehaviour
         //Debug.Log("Player has " + _extremitiesList.Count + " extremities!");
         _body = transform.Find("body");
         _originalYpos = _body.position.y;
+
+        EventManager.Instance.OnRockCollisionEvent += OnRockCollisionEvent;
     }
 
     //========================================================
@@ -251,7 +253,7 @@ public class PlayerCharacterScript : MonoBehaviour
     //
     //========================================================
 
-    public void OnRockCollision()
+    private void OnRockCollisionEvent()
     {
         if (_isDragging)
         {
@@ -267,13 +269,9 @@ public class PlayerCharacterScript : MonoBehaviour
         }
     }
 
-    //========================================================
-    //
-    //========================================================
-
     private void ReloadScene()
     {
-        GameManagerScript.Instance.LoadMenu((int)UIManager.Instance.score);
+        GameManagerScript.Instance.LoadMenu();
     }
 
     private void AllowAnchoring()

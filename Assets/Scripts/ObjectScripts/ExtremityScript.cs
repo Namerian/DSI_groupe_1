@@ -95,7 +95,7 @@ public class ExtremityScript : MonoBehaviour
         {
             Debug.Log("Collision with Bonus Object!");
 
-            UIManager.Instance.AddScore((int)other.GetComponent<BonusObjectScript>().BonusScore);
+            UIManager.Instance.AddScore(other.GetComponent<BonusObjectScript>().BonusScore);
 
             GameObject fx = Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/FX/P_TakeItem"));
             fx.transform.position = other.transform.position;
