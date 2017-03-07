@@ -33,7 +33,7 @@ public class CameraScript : MonoBehaviour
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
 
-        _acceleration = GameManagerScript.Instance.GetAccelerationStep(0);
+        _acceleration = 1;
     }
 
     // Update is called once per frame
@@ -50,6 +50,7 @@ public class CameraScript : MonoBehaviour
 
         if (acceleration > _acceleration)
         {
+            //Debug.Log("current acc = " + _acceleration + "; new acc = " + acceleration);
             _acceleration = acceleration;
             UIManager.Instance.Faster();
         }
@@ -66,7 +67,7 @@ public class CameraScript : MonoBehaviour
 
         if (playerYPos > speedUpLimit)
         {
-            cameraTranslation.y += ((playerYPos - speedUpLimit) / Camera.main.orthographicSize) * _baseSpeed * 5 * Time.fixedDeltaTime;
+            cameraTranslation.y += ((playerYPos - speedUpLimit) / (Camera.main.orthographicSize * 0.5f)) * _baseSpeed * 5 * Time.fixedDeltaTime;
         }
 
         //*****************************************

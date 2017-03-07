@@ -228,15 +228,17 @@ public class GameManagerScript : MonoBehaviour
 
     public float GetAccelerationStep(int altitude)
     {
+        float acc = -1;
+
         foreach (AccelerationStepElement element in _environment.accelerationSteps)
         {
-            if (element.height >= altitude)
+            if (altitude >= element.height)
             {
-                return element.acceleration;
+                acc = element.acceleration;
             }
         }
 
-        return 1;
+        return acc;
     }
 
     //==========================================================================================
@@ -282,6 +284,10 @@ public class GameManagerScript : MonoBehaviour
 
             charLeftHand.connectedBody = anchor1Rigidbody;
             charRightHand.connectedBody = anchor2Rigidbody;
+        }
+        else if(scene.name == "Menu")
+        {
+            Instantiate(Resources.Load("Prefabs/MenuCanvas"));
         }
     }
 
