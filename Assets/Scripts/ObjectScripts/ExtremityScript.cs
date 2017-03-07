@@ -103,10 +103,12 @@ public class ExtremityScript : MonoBehaviour
             //other.gameObject.SetActive(false);
             Destroy(other.gameObject);
         }
-        /*else if (other.CompareTag("Anchor") && IsMoving)
+        else if (other.CompareTag("Anchor") && IsMoving)
         {
-            _helpParticleSystem.startColor = Color.red;
-        }*/
+            
+
+            //_helpParticleSystem.startColor = Color.red;
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
