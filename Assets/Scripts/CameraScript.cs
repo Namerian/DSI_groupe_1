@@ -21,7 +21,8 @@ public class CameraScript : MonoBehaviour
     private Transform _playerTransform;
     private PlayerCharacterScript _playerScript;
 
-    private float _acceleration;
+    private float _acceleration = 1;
+    private bool _started = false;
 
     //==========================================================================================
     // monobehaviour methods
@@ -33,12 +34,19 @@ public class CameraScript : MonoBehaviour
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform.Find("body");
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacterScript>();
 
-        _acceleration = 1;
+        EventManager.Instance.OnAnchorGrabbedEvent += OnAnchorGrabbedEvent;
     }
+
+
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (!_started)
+        {
+            return;
+        }
+
         Vector3 cameraTranslation = Vector3.zero;
 
         //*****************************************
@@ -91,5 +99,21 @@ public class CameraScript : MonoBehaviour
         }
 
         this.transform.Translate(cameraTranslation);
+    }
+
+    //==========================================================================================
+    //
+    //==========================================================================================
+
+    private void OnAnchorGrabbedEvent()
+    {
+        if (!_started)
+        {
+            EventManager.Instance.OnAnchorGrabbedEvent -= OnAnchorGrabbedEvent;
+
+            this.transform.Find("Music").GetComponent<AudioSource>().Play();
+
+            _started = true;
+        }
     }
 }
