@@ -115,6 +115,8 @@ public class ProgressionPanelScript : MonoBehaviour, IMenuPanel
             _bestSessionScoreText.text = "Best Stage Score: " + GameManagerScript.Instance.BestSessionScore;
             _totalScoreText.text = "Cumulated Score: " + GameManagerScript.Instance.TotalScore;
 
+            _currentLevel = GameManagerScript.Instance.ComputeLevel(GameManagerScript.Instance.OldTotalScore);
+
             if (!_updated && GameManagerScript.Instance.SessionScore > 0 && _currentLevel < GameManagerScript.Instance.MaxLevel)
             {
                 _updating = true;
