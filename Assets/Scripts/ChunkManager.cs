@@ -16,8 +16,8 @@ public class ChunkManager : MonoBehaviour
     [SerializeField]
     private GameObject _startChunk;
 
-    [SerializeField]
-    private GameObject _rockPrefab;
+    /*[SerializeField]
+    private GameObject _rockPrefab;*/
 
     [SerializeField]
     private GameObject _warningPrefab;
@@ -83,7 +83,10 @@ public class ChunkManager : MonoBehaviour
             possibleChunkXPos -= _chunkSpawnOffsetInterval;
         }
 
-        Invoke("SpawnRock", Random.Range(GameManagerScript.Instance.MinRockSpawnTimer, GameManagerScript.Instance.MaxRockSpawnTimer));
+        if (GameManagerScript.Instance.SpawnRocks)
+        {
+            Invoke("SpawnRock", Random.Range(GameManagerScript.Instance.MinRockSpawnTimer, GameManagerScript.Instance.MaxRockSpawnTimer));
+        }
     }
 
     //======================================================
@@ -170,7 +173,7 @@ public class ChunkManager : MonoBehaviour
 
         //Debug.Log("Spawning Rock, xPos=" + xPos);
 
-        GameObject rock = Instantiate(_rockPrefab, this.transform);
+        GameObject rock = Instantiate(GameManagerScript.Instance.RockPrefab, this.transform);
         rock.transform.position = new Vector3(xPos, yPos);
 
         GameObject warning = Instantiate(_warningPrefab, this.transform);
