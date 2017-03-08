@@ -55,6 +55,7 @@ public class ChunkManager : MonoBehaviour
     void Start()
     {
         _chunkPrefabs.AddRange(GameManagerScript.Instance.EnvironmentChunks);
+        _chunkPrefabs.AddRange(GameManagerScript.Instance.EnvironmentChunks);
 
         _chunks.Add(_startChunk.GetComponent<ChunkScript>());
 

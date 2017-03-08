@@ -138,7 +138,7 @@ public class GameManagerScript : MonoBehaviour
 
     public List<GameObject> EnvironmentChunks { get { return _environment.uniqueChunks; } }
 
-    public Color BackgroundColour { get { return _environment.backgroundColour; } }
+    public Sprite BackgroundSprite { get { return _environment.backgroundSprite; } }
 
     public GameObject AmbianceBackground { get { return _environment.ambiancePrefab; } }
 
@@ -386,7 +386,7 @@ public class EnvironmentInfo
     public float minRockSpawnTimer;
     public float maxRockSpawnTimer;
     public float rockSpawnOffset;
-    public Color backgroundColour;
+    public Sprite backgroundSprite;
     public GameObject ambiancePrefab;
     public Color crevasseColour;
     public Color wallColour;
