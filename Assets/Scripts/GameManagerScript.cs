@@ -143,11 +143,15 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public bool SpawnRocks { get { return _environment.spawnRocks; } }
+
     public float MinRockSpawnTimer { get { return _environment.minRockSpawnTimer; } }
 
     public float MaxRockSpawnTimer { get { return _environment.maxRockSpawnTimer; } }
 
     public float RockSpawnOffset { get { return _environment.rockSpawnOffset; } }
+
+    public GameObject RockPrefab { get { return _environment.rockPrefab; } }
 
     public List<GameObject> EnvironmentChunks { get { return _environment.uniqueChunks; } }
 
@@ -329,7 +333,7 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    void FillTrackingProperties(Dictionary<string, object> properties)
+    private void FillTrackingProperties(Dictionary<string, object> properties)
     {
         properties["Total Score"] = TotalScore;
         properties["Best Session Score"] = BestSessionScore;
@@ -408,9 +412,11 @@ public class EnvironmentInfo
     public List<GameObject> uniqueChunks;
     public List<AccelerationStepElement> accelerationSteps;
     public float scoreMultiplier;
+    public bool spawnRocks;
     public float minRockSpawnTimer;
     public float maxRockSpawnTimer;
     public float rockSpawnOffset;
+    public GameObject rockPrefab;
     public Sprite backgroundSprite;
     public GameObject ambiancePrefab;
     public Color crevasseColour;
