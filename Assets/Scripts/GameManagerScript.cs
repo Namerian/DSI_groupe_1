@@ -28,7 +28,7 @@ public class GameManagerScript : MonoBehaviour
     //
     //==========================================================================================
 
-    
+
 
     [SerializeField]
     private List<CharacterListElement> _characterPrefabs;
@@ -63,6 +63,19 @@ public class GameManagerScript : MonoBehaviour
 
             TotalScore = PlayerPrefs.GetInt("TotalScore");
             BestSessionScore = PlayerPrefs.GetInt("BestSessionScore");
+
+            //*****
+            int totalPossibleScore = 0;
+            foreach (int x in _levelExperience)
+            {
+                totalPossibleScore += x;
+            }
+            //Debug.Log("total possible score: " + totalPossibleScore);
+            if (TotalScore > totalPossibleScore)
+            {
+                TotalScore = totalPossibleScore;
+            }
+            //*****
 
             AmplitudeHelper.AppId = "e42975312282ef47be31ec6af5cb48fc";
             AmplitudeHelper.Instance.FillCustomProperties += FillTrackingProperties;
@@ -182,6 +195,18 @@ public class GameManagerScript : MonoBehaviour
         TotalScore += SessionScore;
         int newLevel = ComputeLevel(TotalScore) + 1;
 
+        //*****
+        int totalPossibleScore = 0;
+        foreach (int x in _levelExperience)
+        {
+            totalPossibleScore += x;
+        }
+        if (TotalScore > totalPossibleScore)
+        {
+            TotalScore = totalPossibleScore;
+        }
+        //*****
+
         if (newLevel > oldLevel && newLevel % 5 == 0)
         {
             AmplitudeHelper.Instance.LogEvent("lvl " + newLevel + " reached");
@@ -215,7 +240,7 @@ public class GameManagerScript : MonoBehaviour
 
         for (int i = 0; i < _levelExperience.Count; i++)
         {
-            if (experience > _levelExperience[i])
+            if (experience >= _levelExperience[i])
             {
                 level++;
                 experience -= _levelExperience[i];
@@ -314,7 +339,7 @@ public class GameManagerScript : MonoBehaviour
     {
         string challengeName = PlayerPrefs.GetString("ChallengeName");
 
-        if(challengeName == "")
+        if (challengeName == "")
         {
             CreateChallenge();
             return;
