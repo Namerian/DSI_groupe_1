@@ -21,7 +21,7 @@ public class RockScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (this.transform.position.y + _radius < _camera.transform.position.y - _camera.orthographicSize)
+        if (this.transform.position.y + _radius < _camera.transform.position.y - _camera.orthographicSize - 10)
         {
             Destroy(this.gameObject);
         }
