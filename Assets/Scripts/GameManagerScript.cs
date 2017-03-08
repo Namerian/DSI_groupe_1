@@ -112,7 +112,7 @@ public class GameManagerScript : MonoBehaviour
 
     public int TotalScore { get; private set; }
 
-    public int OldTotalScore { get { return TotalScore - SessionScore; } }
+    public int OldTotalScore { get; private set; }
 
     public int MaxLevel { get { return _levelExperience.Count; } }
 
@@ -196,6 +196,7 @@ public class GameManagerScript : MonoBehaviour
         }
 
         int oldLevel = ComputeLevel(TotalScore) + 1;
+        OldTotalScore = TotalScore;
         TotalScore += SessionScore;
         int newLevel = ComputeLevel(TotalScore) + 1;
 
