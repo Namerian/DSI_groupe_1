@@ -233,6 +233,8 @@ public class PlayerCharacterScript : MonoBehaviour
 
                             _levitationTimer = 0;
 
+                            EventManager.Instance.SendOnAnchorGrabbedEvent();
+
                             break;
                         }
                     }
